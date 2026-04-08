@@ -1,18 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/browser'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
-import { Heart, AlertCircle } from 'lucide-react'
+import { Heart, AlertCircle, Check } from 'lucide-react'
+import { isRememberMeEnabled, enableRememberMe, disableRememberMe } from '@/lib/auth/utils'
 
 export default function LoginPage(): JSX.Element {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Load remember me preference from localStorage on mount
+  useEffect(() => {
+    setRememberMe(isRememberMeEnabled())
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,17 +28,30 @@ export default function LoginPage(): JSX.Element {
 
     try {
       const supabase = createClient()
-      
-      const { error } = await supabase.auth.signInWithPassword({
+
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) {
-        setError(error.message === 'Invalid login credentials' 
+        setError(error.message === 'Invalid login credentials'
           ? 'Email atau kata laluan salah. Sila cuba lagi.'
           : error.message)
         return
+      }
+
+      // Handle remember me preference
+      if (rememberMe) {
+        enableRememberMe()
+        // Refresh session to get extended expiry
+        if (data.session?.refresh_token) {
+          await supabase.auth.refreshSession({
+            refresh_token: data.session.refresh_token,
+          })
+        }
+      } else {
+        disableRememberMe()
       }
 
       // Successfully logged in
@@ -101,6 +121,31 @@ export default function LoginPage(): JSX.Element {
                   className="w-full px-4 py-3 text-lg border-2 border-primary-200 rounded-xl focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   disabled={loading}
                 />
+              </div>
+
+              {/* Remember Me Checkbox */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  id="remember-me"
+                  onClick={() => setRememberMe(!rememberMe)}
+                  className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
+                    rememberMe
+                      ? 'bg-primary border-primary text-white'
+                      : 'border-primary-300 hover:border-primary bg-white'
+                  }`}
+                  aria-checked={rememberMe}
+                  role="checkbox"
+                >
+                  {rememberMe && <Check size={16} strokeWidth={3} />}
+                </button>
+                <label
+                  htmlFor="remember-me"
+                  className="text-base text-primary-light cursor-pointer select-none"
+                  onClick={() => setRememberMe(!rememberMe)}
+                >
+                  Ingat saya (tidak perlu login semula)
+                </label>
               </div>
 
               {/* Error Message */}

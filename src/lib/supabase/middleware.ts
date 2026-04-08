@@ -21,9 +21,18 @@ export async function updateSession(request: NextRequest) {
           supabaseResponse = NextResponse.next({
             request,
           })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+          cookiesToSet.forEach(({ name, value, options }) => {
+            // For persistent sessions, extend cookie maxAge to 30 days
+            const isPersistent = request.cookies.get('nutrisihat_persistent_session')?.value === 'true'
+            const finalOptions = options ? { ...options } : {}
+
+            if (isPersistent) {
+              finalOptions.maxAge = 60 * 60 * 24 * 30 // 30 days
+              finalOptions.path = '/'
+            }
+
+            supabaseResponse.cookies.set(name, value, finalOptions)
+          })
         },
       },
     }
@@ -38,7 +47,7 @@ export async function updateSession(request: NextRequest) {
 
   // Protected routes that require authentication
   const protectedRoutes = ['/dashboard', '/profile', '/gula-darah', '/ubat', '/makanan', '/ai', '/health']
-  const isProtectedRoute = protectedRoutes.some(route => 
+  const isProtectedRoute = protectedRoutes.some(route =>
     request.nextUrl.pathname.startsWith(route)
   )
 

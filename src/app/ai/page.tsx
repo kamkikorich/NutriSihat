@@ -39,34 +39,47 @@ export default function AIPage(): JSX.Element {
   // Handle send message
   const handleSend = async () => {
     if (!input.trim()) return;
-    
+
     const userMessage = input.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
-    
-    // Simulate AI response (placeholder)
-    setTimeout(() => {
-      let response = '';
-      
-      // Simple keyword-based responses for demo
-      if (userMessage.toLowerCase().includes('nasi lemak')) {
-        response = 'Mak, Nasi Lemak adalah makanan yang tinggi GI (85) dan mengandungi nasi putih, santan, dan sambal manis. Untuk diabetes, elakkan atau kurangkan Nasi Lemak. Alternatif: Nasi brown dengan lauk sihat.';
-      } else if (userMessage.toLowerCase().includes('teh tarik')) {
-        response = 'Mak, Teh Tarik adalah minuman yang sangat tinggi gula. Untuk diabetes, elakkan Teh Tarik biasa. Alternatif: Teh O tanpa gula atau Teh dengan stevia.';
-      } else if (userMessage.toLowerCase().includes('selamat') || userMessage.toLowerCase().includes('boleh makan')) {
-        response = 'Mak, makanan selamat untuk diabetes dan kesihatan uterus termasuk: sayur hijau (brokoli, kobis, bayam), buah-buahan (apple, jambu batu), protein (ikan, ayam tanpa kulit), dan whole grain (oatmeal).';
-      } else if (userMessage.toLowerCase().includes('elak')) {
-        response = 'Mak, makanan perlu elak untuk diabetes termasuk: Nasi putih, Teh Tarik, Roti Canai, kuih-muih, minuman manis, dan makanan processed.';
-      } else if (userMessage.toLowerCase().includes('uterus') || userMessage.toLowerCase().includes('rahim')) {
-        response = 'Mak, untuk kesihatan uterus, makan sayur cruciferous (brokoli, kobis), buah-buahan (apple, tomato, berries), vitamin D dari ikan, dan kurangkan makanan processed.';
-      } else {
-        response = 'Mak, saya faham pertanyaan anda. Untuk nasihat yang lebih tepat, sila berjumpa doktor atau dietitian. Saya boleh membantu dengan panduan umum tentang makanan untuk diabetes dan kesihatan uterus.';
+
+    try {
+      // Call real AI API
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'user',
+              content: userMessage,
+            },
+          ],
+          userId: 'anonymous', // Can be replaced with actual user ID when logged in
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to get AI response');
       }
-      
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+
+      setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+    } catch (error) {
+      console.error('AI Chat Error:', error);
+      // Fallback response on error
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Maaf, terdapat masalah sambungan. Sila cuba lagi sebentar lagi.'
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
   
   // Handle suggestion click

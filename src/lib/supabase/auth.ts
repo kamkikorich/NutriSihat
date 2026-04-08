@@ -49,6 +49,13 @@ export async function signIn(
 export async function signOut(): Promise<{ error: AuthError | null }> {
   const supabase = createClient()
   const { error } = await supabase.auth.signOut()
+
+  // Clear persistent session flags on logout
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('nutrisihat_persistent_session')
+    localStorage.removeItem('nutrisihat_remember_me')
+  }
+
   return { error }
 }
 
