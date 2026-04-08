@@ -8,6 +8,7 @@
   "env": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://oasowmrkydwufexxxwjc.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hc293bXJreWR3dWZleHh4d2pjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2NTg0MTEsImV4cCI6MjA5MTIzNDQxMX0.5dmEesrAuWDLcQDsmq2KN0o8Uc9JS_df8HCxVySFc8o",
+    "SUPABASE_SERVICE_ROLE_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9hc293bXJreWR3dWZleHh4d2pjIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTY1ODQxMSwiZXhwIjoyMDkxMjM0NDExfQ.ZesPyCQQ0dMaYIJU4YmYZ_vwfzA8tVhmNZOIq1Yaj98",
     "OLLAMA_API_URL": "https://ollama.com/api",
     "OLLAMA_API_KEY": "2d722e0edfd34594986d83ae0c49348c._2FPQyPsn9vM4fR4V_Rk0Mz_",
     "OLLAMA_MODEL": "gemini-3-flash-preview:cloud",
