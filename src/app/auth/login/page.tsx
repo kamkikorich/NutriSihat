@@ -181,7 +181,7 @@ export default function LoginPage(): JSX.Element {
 
         {/* Footer */}
         <p className="text-center text-sm text-primary-light mt-6">
-          © 2024 NutriSihat. Jaga kesihatan Mak.
+          © 2026 NutriSihat. Jaga kesihatan Mak. Dibangunkan oleh wajutech.
         </p>
       </div>
     </main>
