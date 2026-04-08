@@ -1,0 +1,763 @@
+// NutriSihat - Food Data
+// Malaysian local foods categorized for Diabetes and Uterine health
+// Based on research: Diabetes guidelines, Uterine health diet, Malaysian food analysis
+
+import type { FoodItem, FoodCategory } from '@/types/food';
+
+// ==========================================
+// FOOD CATEGORIES
+// ==========================================
+
+export const FOOD_CATEGORIES: Record<FoodCategory, { name: string; description: string }> = {
+  nasi: { name: 'Nasi & Bubur', description: 'Makanan ruji utama' },
+  minuman: { name: 'Minuman', description: 'Teh, kopi, jus' },
+  roti: { name: 'Roti & Bread', description: 'Roti canai, roti bakeri' },
+  kuih: { name: 'Kuih-muih', description: 'Kuih tradisional' },
+  sayur: { name: 'Sayur-sayuran', description: 'Sayur hijau dan lain-lain' },
+  buah: { name: 'Buah-buahan', description: 'Buah tempatan dan imported' },
+  protein: { name: 'Protein', description: 'Ikan, ayam, daging' },
+  lauk: { name: 'Lauk Pauk', description: 'Lauk tradisional' },
+  snack: { name: 'Snack', description: 'Makanan ringan' },
+  sup: { name: 'Sup', description: 'Sup dan soto' },
+};
+
+// ==========================================
+// FOOD ITEMS - MALAYSIAN LOCAL FOODS
+// ==========================================
+
+export const FOODS: FoodItem[] = [
+  // ==========================================
+  // SAFE FOODS - BOLEH MAKAN
+  // ==========================================
+  
+  // Sayur-sayuran (Safe for both Diabetes and Uterine health)
+  {
+    id: 'sayur-brokoli',
+    name: 'Brokoli',
+    name_english: 'Broccoli',
+    description: 'Sayur hijau yang kaya dengan vitamin dan fiber. Sangat baik untuk kesihatan uterus dan diabetes.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI rendah (15). Kaya fiber, membantu stabilkan gula darah.',
+      uterus: 'Sayur cruciferous, membantu kurangkan risiko fibroid. Kaya vitamin C dan K.',
+      general: 'Kaya antioksida, vitamin C, vitamin K, dan fiber.',
+    },
+    alternatives: ['Kobis', 'Kale', 'Bayam'],
+    tips: ['Rebus atau kukus untuk mengekalkan nutrien', 'Jangan overcook'],
+    image_url: '/images/foods/broccoli.png',
+    is_local_malaysian: false,
+  },
+  {
+    id: 'sayur-kobis',
+    name: 'Kobis',
+    name_english: 'Cabbage',
+    description: 'Sayur cruciferous yang baik untuk kesihatan uterus dan diabetes.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 10,
+    health_notes: {
+      diabetes: 'GI sangat rendah (10). Kaya fiber, rendah kalori.',
+      uterus: 'Sayur cruciferous membantu kurangkan risiko fibroid.',
+      general: 'Kaya vitamin C, vitamin K, dan fiber.',
+    },
+    alternatives: ['Brokoli', 'Kale'],
+    tips: ['Boleh dimakan mentah dalam salad', 'Rebus untuk sup'],
+    image_url: '/images/foods/cabbage.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sayur-bayam',
+    name: 'Bayam',
+    name_english: 'Spinach',
+    description: 'Sayur hijau yang kaya dengan iron dan vitamin. Sangat baik untuk kesihatan.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI rendah. Kaya fiber dan magnesium.',
+      uterus: 'Kaya iron, penting untuk kesihatan uterus.',
+      general: 'Kaya iron, vitamin A, vitamin C, dan magnesium.',
+    },
+    alternatives: ['Kangkung', 'Sawi'],
+    tips: ['Kukus atau goreng dengan sedikit minyak', 'Tambah dalam sup'],
+    image_url: '/images/foods/spinach.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sayur-kangkung',
+    name: 'Kangkung',
+    name_english: 'Water Spinach',
+    description: 'Sayur tempatan Malaysia yang kaya dengan vitamin dan mineral.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI rendah. Kaya fiber.',
+      uterus: 'Kaya vitamin A dan iron.',
+      general: 'Sayur tempatan, murah dan berkhasiat.',
+    },
+    alternatives: ['Bayam', 'Sawi'],
+    tips: ['Goreng belacan popular tapi kurangkan belacan manis', 'Rebus untuk sup'],
+    image_url: '/images/foods/kangkung.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sayur-sawi',
+    name: 'Sawi',
+    name_english: 'Chinese Mustard Greens',
+    description: 'Sayur hijau tempatan yang kaya dengan vitamin A dan C.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI rendah. Kaya fiber dan rendah kalori.',
+      uterus: 'Kaya vitamin A dan C, baik untuk kesihatan.',
+      general: 'Sayur tempatan, murah dan berkhasiat.',
+    },
+    alternatives: ['Bayam', 'Kangkung'],
+    tips: ['Goreng dengan ikan bilis', 'Tambah dalam sup'],
+    image_url: '/images/foods/sawi.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sayur-tomato',
+    name: 'Tomato',
+    name_english: 'Tomato',
+    description: 'Buah/sayur yang kaya dengan lycopene dan vitamin C. Sangat baik untuk kesihatan uterus.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI rendah (15). Kaya vitamin C dan lycopene.',
+      uterus: 'Lycopene membantu kurangkan risiko fibroid. Kaya vitamin C.',
+      general: 'Kaya antioksida, lycopene, vitamin C.',
+    },
+    alternatives: [' Tomato merah', 'Tomato hijau'],
+    tips: ['Makan mentah dalam salad', 'Tambah dalam sup atau kari'],
+    image_url: '/images/foods/tomato.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sayur-carrot',
+    name: 'Lobak Merah',
+    name_english: 'Carrot',
+    description: 'Sayur yang kaya dengan vitamin A dan beta-carotene. Baik untuk kesihatan.',
+    category: 'sayur',
+    status: 'safe',
+    glycemic_index: 35,
+    health_notes: {
+      diabetes: 'GI moderate (35) tapi boleh dimakan dalam jumlah sederhana. Kaya fiber.',
+      uterus: 'Kaya beta-carotene, baik untuk kesihatan.',
+      general: 'Kaya vitamin A, baik untuk mata dan kesihatan.',
+    },
+    alternatives: ['Lobak putih'],
+    tips: ['Rebus atau kukus', 'Tambah dalam sup'],
+    image_url: '/images/foods/carrot.png',
+    is_local_malaysian: true,
+  },
+  
+  // Buah-buahan (Safe for both)
+  {
+    id: 'buah-apple',
+    name: 'Apple',
+    name_english: 'Apple',
+    description: 'Buah yang kaya dengan fiber dan vitamin. Sangat baik untuk diabetes dan kesihatan uterus.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 38,
+    health_notes: {
+      diabetes: 'GI moderate (38) tapi kaya fiber. Boleh dimakan 1 sehari.',
+      uterus: 'Kaya fiber dan antioksida, membantu kurangkan risiko fibroid.',
+      general: 'Kaya fiber, vitamin C, dan antioksida.',
+    },
+    alternatives: ['Pear', 'Guava'],
+    tips: ['Makan kulit untuk lebih fiber', 'Pilih apple hijau untuk kurang gula'],
+    image_url: '/images/foods/apple.png',
+    is_local_malaysian: false,
+  },
+  {
+    id: 'buah-guava',
+    name: 'Jambu Batu',
+    name_english: 'Guava',
+    description: 'Buah tempatan yang kaya dengan vitamin C dan fiber. Sangat baik untuk diabetes.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 12,
+    health_notes: {
+      diabetes: 'GI sangat rendah (12). Sangat baik untuk diabetes.',
+      uterus: 'Kaya vitamin C, baik untuk kesihatan.',
+      general: 'Buah tempatan, kaya vitamin C.',
+    },
+    alternatives: ['Apple', 'Pear'],
+    tips: ['Makan tanpa kulit atau dengan kulit', 'Pilih jambu yang tidak terlalu masak'],
+    image_url: '/images/foods/guava.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'buah-papaya',
+    name: 'Betik',
+    name_english: 'Papaya',
+    description: 'Buah tempatan yang kaya dengan vitamin A dan C. Baik untuk kesihatan.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 60,
+    health_notes: {
+      diabetes: 'GI moderate (60). Boleh dimakan dalam jumlah sederhana.',
+      uterus: 'Kaya vitamin A dan C, baik untuk kesihatan.',
+      general: 'Kaya vitamin A, C, dan fiber.',
+    },
+    alternatives: ['Mango (kurang)'],
+    tips: ['Makan dalam jumlah sederhana untuk diabetes', 'Pilih betik yang tidak terlalu manis'],
+    image_url: '/images/foods/papaya.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'buah-starfruit',
+    name: 'Belimbing',
+    name_english: 'Starfruit',
+    description: 'Buah tempatan yang rendah gula dan kaya vitamin C. Baik untuk diabetes.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 25,
+    health_notes: {
+      diabetes: 'GI rendah (25). Sangat baik untuk diabetes.',
+      uterus: 'Kaya vitamin C, baik untuk kesihatan.',
+      general: 'Buah tempatan, rendah gula.',
+    },
+    alternatives: ['Jambu Batu'],
+    tips: ['Makan mentah', 'Boleh dibuat jus tanpa gula'],
+    image_url: '/images/foods/starfruit.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'buah-citrus',
+    name: 'Oren / Limau',
+    name_english: 'Orange / Lime',
+    description: 'Buah citrus yang kaya vitamin C. Baik untuk kesihatan uterus.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 40,
+    health_notes: {
+      diabetes: 'GI moderate (40). Boleh dimakan dalam jumlah sederhana.',
+      uterus: 'Citrus buah membantu kurangkan risiko fibroid.',
+      general: 'Kaya vitamin C dan antioksida.',
+    },
+    alternatives: ['Lemon', 'Grapefruit'],
+    tips: ['Makan buah segar, bukan jus', 'Tambah limau dalam air untuk minum'],
+    image_url: '/images/foods/orange.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'buah-berry',
+    name: 'Blueberry / Strawberry',
+    name_english: 'Blueberries / Strawberries',
+    description: 'Buah berry yang kaya antioksida. Sangat baik untuk kesihatan uterus.',
+    category: 'buah',
+    status: 'safe',
+    glycemic_index: 25,
+    health_notes: {
+      diabetes: 'GI rendah (25). Sangat baik untuk diabetes.',
+      uterus: 'Antioksida membantu kurangkan risiko fibroid.',
+      general: 'Kaya antioksida dan vitamin C.',
+    },
+    alternatives: ['Raspberry', 'Blackberry'],
+    tips: ['Makan segar', 'Tambah dalam yogurt tanpa gula'],
+    image_url: '/images/foods/blueberry.png',
+    is_local_malaysian: false,
+  },
+  
+  // Protein (Safe for both)
+  {
+    id: 'protein-ikan',
+    name: 'Ikan (Segar)',
+    name_english: 'Fresh Fish',
+    description: 'Ikan segar adalah protein yang sangat baik. Kaya dengan vitamin D dan omega-3. Sangat baik untuk kesihatan uterus.',
+    category: 'protein',
+    status: 'safe',
+    health_notes: {
+      diabetes: 'Protein berkhasiat, tidak meningkatkan gula darah.',
+      uterus: 'Kaya vitamin D dan omega-3, membantu kurangkan risiko fibroid.',
+      general: 'Kaya protein, vitamin D, omega-3.',
+    },
+    alternatives: ['Ikan salmon', 'Ikan tenggiri', 'Ikan kembung'],
+    tips: ['Goreng dengan sedikit minyak', 'Rebus atau bakar', 'Pilih ikan segar'],
+    image_url: '/images/foods/fish.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'protein-ayam',
+    name: 'Ayam (Tanpa Kulit)',
+    name_english: 'Chicken (Skinless)',
+    description: 'Ayam tanpa kulit adalah protein yang baik. Rendah lemak.',
+    category: 'protein',
+    status: 'safe',
+    health_notes: {
+      diabetes: 'Protein berkhasiat, tidak meningkatkan gula darah.',
+      uterus: 'Protein baik untuk kesihatan.',
+      general: 'Kaya protein, rendah lemak jika tanpa kulit.',
+    },
+    alternatives: ['Ayam kampung', 'Ayam rebus'],
+    tips: ['Buang kulit untuk kurangkan lemak', 'Rebus atau goreng dengan sedikit minyak'],
+    image_url: '/images/foods/chicken.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'protein-egg',
+    name: 'Telur',
+    name_english: 'Egg',
+    description: 'Telur adalah protein yang baik. Kaya dengan vitamin D.',
+    category: 'protein',
+    status: 'safe',
+    health_notes: {
+      diabetes: 'Protein berkhasiat, tidak meningkatkan gula darah.',
+      uterus: 'Kaya vitamin D, penting untuk kesihatan uterus.',
+      general: 'Kaya protein, vitamin D, dan choline.',
+    },
+    alternatives: ['Telur rebus', 'Telur goreng (sedikit minyak)'],
+    tips: ['Rebus untuk kurangkan lemak', 'Maksimum 2 telur sehari'],
+    image_url: '/images/foods/egg.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'protein-tofu',
+    name: 'Tauhu',
+    name_english: 'Tofu',
+    description: 'Tauhu adalah protein plant-based. Baik untuk kesihatan.',
+    category: 'protein',
+    status: 'safe',
+    health_notes: {
+      diabetes: 'Protein plant-based, tidak meningkatkan gula darah.',
+      uterus: 'Penting: Tauhu mengandungi phytoestrogen. Consult doctor untuk uterus condition.',
+      general: 'Kaya protein plant-based.',
+    },
+    alternatives: ['Tempeh'],
+    tips: ['Goreng dengan sedikit minyak', 'Tambah dalam sup', 'PENTING: Tanya doctor tentang estrogen'],
+    image_url: '/images/foods/tofu.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'protein-tempeh',
+    name: 'Tempeh',
+    name_english: 'Tempeh',
+    description: 'Tempeh adalah protein plant-based dari Indonesia/Malaysia. Kaya fiber.',
+    category: 'protein',
+    status: 'safe',
+    health_notes: {
+      diabetes: 'GI rendah, kaya fiber dan protein.',
+      uterus: 'Penting: Tempeh mengandungi phytoestrogen. Consult doctor untuk uterus condition.',
+      general: 'Kaya protein, fiber, dan probiotics.',
+    },
+    alternatives: ['Tauhu'],
+    tips: ['Goreng atau rebus', 'Tambah dalam salad atau sup'],
+    image_url: '/images/foods/tempeh.png',
+    is_local_malaysian: true,
+  },
+  
+  // Whole Grains (Safe)
+  {
+    id: 'grain-oat',
+    name: 'Oatmeal / Bubur Oat',
+    name_english: 'Oatmeal',
+    description: 'Oat adalah whole grain yang sangat baik untuk diabetes. GI rendah.',
+    category: 'nasi',
+    status: 'safe',
+    glycemic_index: 55,
+    health_notes: {
+      diabetes: 'GI rendah (55). Kaya fiber, membantu stabilkan gula darah.',
+      uterus: 'Whole grain baik untuk kesihatan.',
+      general: 'Kaya fiber, beta-glucan.',
+    },
+    alternatives: ['Quinoa', 'Whole wheat'],
+    tips: ['Masak dengan air, bukan susu manis', 'Tambah buah segar', 'Elakkan oat instant dengan gula'],
+    image_url: '/images/foods/oatmeal.png',
+    is_local_malaysian: false,
+  },
+  {
+    id: 'grain-whole-wheat',
+    name: 'Roti Whole Wheat',
+    name_english: 'Whole Wheat Bread',
+    description: 'Roti whole wheat lebih baik daripada roti putih. GI moderate.',
+    category: 'roti',
+    status: 'safe',
+    glycemic_index: 50,
+    health_notes: {
+      diabetes: 'GI moderate (50). Lebih baik daripada roti putih.',
+      uterus: 'Whole grain baik untuk kesihatan.',
+      general: 'Kaya fiber.',
+    },
+    alternatives: ['Roti oat', 'Roti rye'],
+    tips: ['Pilih roti whole wheat tulen', 'Makan dengan protein (telur, ayam)'],
+    image_url: '/images/foods/whole-wheat-bread.png',
+    is_local_malaysian: false,
+  },
+  
+  // Kacang (Safe)
+  {
+    id: 'nut-peanut',
+    name: 'Kacang Tanah',
+    name_english: 'Peanuts',
+    description: 'Kacang tanah adalah protein dan fiber yang baik. GI rendah.',
+    category: 'snack',
+    status: 'safe',
+    glycemic_index: 15,
+    health_notes: {
+      diabetes: 'GI sangat rendah (15). Kaya protein dan fiber.',
+      uterus: 'Kaya protein, baik untuk kesihatan.',
+      general: 'Kaya protein, fiber, dan lemak sihat.',
+    },
+    alternatives: ['Kacang almond', 'Walnut'],
+    tips: ['Makan dalam jumlah sederhana', 'Pilih kacang tanpa garam tambahan'],
+    image_url: '/images/foods/peanuts.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'nut-almond',
+    name: 'Almond',
+    name_english: 'Almonds',
+    description: 'Almond adalah nut yang sangat berkhasiat. Kaya vitamin E.',
+    category: 'snack',
+    status: 'safe',
+    glycemic_index: 0,
+    health_notes: {
+      diabetes: 'GI rendah (0). Kaya lemak sihat.',
+      uterus: 'Kaya vitamin E, baik untuk kesihatan.',
+      general: 'Kaya vitamin E, lemak sihat.',
+    },
+    alternatives: ['Walnut', 'Cashew'],
+    tips: ['Makan sedikit (10-15 biji)', 'Pilih almond tanpa garam'],
+    image_url: '/images/foods/almonds.png',
+    is_local_malaysian: false,
+  },
+  
+  // ==========================================
+  // AVOID FOODS - PERLU ELAK
+  // ==========================================
+  
+  {
+    id: 'nasi-putih',
+    name: 'Nasi Putih',
+    name_english: 'White Rice',
+    description: 'Nasi putih Malaysia adalah ruji utama tapi GI tinggi. KURANG atau ELAK.',
+    category: 'nasi',
+    status: 'avoid',
+    glycemic_index: 83,
+    health_notes: {
+      diabetes: 'GI SANGAT TINGGI (83). Meningkatkan gula darah dengan cepat. KURANG atau GANTI.',
+      uterus: 'Refined grain, kurang fiber.',
+      general: 'GI tinggi, kurang nutrien berbanding whole grain.',
+    },
+    alternatives: ['Nasi brown', 'Oatmeal', 'Quinoa', 'Nasi basmati (GI lower)'],
+    tips: ['Ganti dengan nasi brown', 'Kurangkan portion', 'Makan lebih sayur dengan nasi'],
+    image_url: '/images/foods/white-rice.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'nasi-lemak',
+    name: 'Nasi Lemak',
+    name_english: 'Nasi Lemak',
+    description: 'Nasi lemak adalah makanan Malaysia popular tapi TIDAK SESUAI untuk diabetes.',
+    category: 'nasi',
+    status: 'avoid',
+    glycemic_index: 85,
+    health_notes: {
+      diabetes: 'GI TINGGI (85). Nasi putih + santan + sambal manis = tidak sesuai.',
+      uterus: 'Tinggi lemak dan refined grain.',
+      general: 'Makanan Malaysia popular tapi kurang sihat untuk condition ini.',
+    },
+    alternatives: ['Nasi brown dengan lauk sihat', 'Oatmeal dengan telur'],
+    tips: ['ELAK atau KURANG', 'Pilih nasi brown version jika ada', 'Kurangkan sambal'],
+    image_url: '/images/foods/nasi-lemak.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'teh-tarik',
+    name: 'Teh Tarik',
+    name_english: 'Teh Tarik',
+    description: 'Teh tarik Malaysia adalah minuman yang TINGGI GULA. PERLU ELAK.',
+    category: 'minuman',
+    status: 'avoid',
+    health_notes: {
+      diabetes: 'TINGGI GULA! Teh tarik biasanya mengandungi 2-3 sudu gula. ELAK TOTAL.',
+      uterus: 'Tinggi gula, tidak baik untuk kesihatan.',
+      general: 'Minuman Malaysia popular tapi tinggi gula dan kalori.',
+    },
+    alternatives: ['Teh O (tanpa gula)', 'Teh dengan stevia', 'Green tea'],
+    tips: ['ELAK teh tarik biasa', 'Pilih Teh O kurang manis atau tanpa gula', 'Ganti dengan teh herba'],
+    image_url: '/images/foods/teh-tarik.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'roti-canai',
+    name: 'Roti Canai',
+    name_english: 'Roti Canai',
+    description: 'Roti canai Malaysia adalah tinggi minyak dan refined flour. PERLU ELAK.',
+    category: 'roti',
+    status: 'avoid',
+    glycemic_index: 75,
+    health_notes: {
+      diabetes: 'GI TINGGI (75). Tinggi minyak dan refined flour. ELAK.',
+      uterus: 'Tinggi lemak trans dan refined grain.',
+      general: 'Makanan Malaysia popular tapi kurang sihat.',
+    },
+    alternatives: ['Roti whole wheat', 'Oatmeal', 'Telur rebus'],
+    tips: ['ELAK', 'Pilih roti whole wheat jika nak roti', 'Makan dengan lauk sihat'],
+    image_url: '/images/foods/roti-canai.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'kuih-muih',
+    name: 'Kuih-muih',
+    name_english: 'Traditional Malaysian Kuih',
+    description: 'Kuih tradisional Malaysia seperti kuih lapis, seri muka adalah TINGGI GULA. ELAK.',
+    category: 'kuih',
+    status: 'avoid',
+    health_notes: {
+      diabetes: 'TINGGI GULA dan refined flour. ELAK TOTAL.',
+      uterus: 'Tinggi gula, tidak baik untuk kesihatan.',
+      general: 'Kuih Malaysia popular tapi tinggi gula dan kalori.',
+    },
+    alternatives: ['Buah segar', 'Yogurt tanpa gula', 'Kacang'],
+    tips: ['ELAK', 'Ganti dengan buah segar', 'Pilih kuih kurang manis jika terpaksa'],
+    image_url: '/images/foods/kuih.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'minuman-manis',
+    name: 'Minuman Manis',
+    name_english: 'Sweet Drinks',
+    description: 'Minuman manis seperti soda, jus dengan gula, sirap adalah TINGGI GULA. ELAK.',
+    category: 'minuman',
+    status: 'avoid',
+    health_notes: {
+      diabetes: 'TINGGI GULA! ELAK TOTAL.',
+      uterus: 'Tinggi gula, tidak baik untuk kesihatan.',
+      general: 'Minuman manis meningkatkan gula darah dengan cepat.',
+    },
+    alternatives: ['Air kosong', 'Teh herba', 'Jus tanpa gula'],
+    tips: ['ELAK semua minuman manis', 'Minum air kosong', 'Pilih teh herba'],
+    image_url: '/images/foods/sweet-drinks.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'makanan-process',
+    name: 'Makanan Processed',
+    name_english: 'Processed Foods',
+    description: 'Makanan processed seperti nugget, burger processed adalah TIDAK SIHAT. ELAK.',
+    category: 'snack',
+    status: 'avoid',
+    health_notes: {
+      diabetes: 'Tinggi sodium, lemak trans, dan additives. ELAK.',
+      uterus: 'Processed food mengandungi pollutants dan additives tidak baik.',
+      general: 'Makanan processed kurang berkhasiat.',
+    },
+    alternatives: ['Ayam segar', 'Ikan segar', 'Telur'],
+    tips: ['ELAK processed food', 'Pilih makanan segar', 'Masak di rumah'],
+    image_url: '/images/foods/processed-food.png',
+    is_local_malaysian: false,
+  },
+  {
+    id: 'fried-food',
+    name: 'Makanan Goreng (Deep Fried)',
+    name_english: 'Deep Fried Foods',
+    description: 'Makanan goreng seperti goreng pisang, keropok adalah TINGGI LEMAK. ELAK.',
+    category: 'snack',
+    status: 'avoid',
+    health_notes: {
+      diabetes: 'Tinggi lemak trans dan kalori. ELAK.',
+      uterus: 'Tinggi lemak trans, tidak baik untuk kesihatan.',
+      general: 'Makanan goreng kurang sihat.',
+    },
+    alternatives: ['Buah segar', 'Kacang', 'Kukus atau bakar'],
+    tips: ['ELAK deep fried', 'Pilih kukus atau bakar', 'Goreng dengan sedikit minyak jika terpaksa'],
+    image_url: '/images/foods/fried-food.png',
+    is_local_malaysian: true,
+  },
+  
+  // ==========================================
+  // LIMIT FOODS - BOLEH KURANG
+  // ==========================================
+  
+  {
+    id: 'nasi-brown',
+    name: 'Nasi Brown',
+    name_english: 'Brown Rice',
+    description: 'Nasi brown lebih baik daripada nasi putih tapi masih moderate GI. BOLEH dalam jumlah sederhana.',
+    category: 'nasi',
+    status: 'limit',
+    glycemic_index: 50,
+    health_notes: {
+      diabetes: 'GI moderate (50). Lebih baik daripada nasi putih. BOLEH dalam jumlah sederhana.',
+      uterus: 'Whole grain, baik untuk kesihatan.',
+      general: 'Whole grain dengan lebih fiber.',
+    },
+    alternatives: ['Quinoa', 'Oatmeal'],
+    tips: ['BOLEH makan dalam portion sederhana', 'Makan lebih sayur dengan nasi', 'Jangan makan terlalu banyak'],
+    image_url: '/images/foods/brown-rice.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'mango',
+    name: 'Mango',
+    name_english: 'Mango',
+    description: 'Mango adalah buah tempatan yang GI moderate. BOLEH dalam jumlah sederhana.',
+    category: 'buah',
+    status: 'limit',
+    glycemic_index: 51,
+    health_notes: {
+      diabetes: 'GI moderate (51). BOLEH dalam jumlah sederhana (sedikit).',
+      uterus: 'Kaya vitamin A dan C.',
+      general: 'Buah tempatan, kaya vitamin.',
+    },
+    alternatives: ['Apple', 'Guava', 'Jambu Batu'],
+    tips: ['Makan sedikit sahaja', 'Pilih mango yang tidak terlalu manis', 'Jangan makan setiap hari'],
+    image_url: '/images/foods/mango.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'banana',
+    name: 'Pisang',
+    name_english: 'Banana',
+    description: 'Pisang adalah buah yang GI moderate. BOLEH dalam jumlah sederhana.',
+    category: 'buah',
+    status: 'limit',
+    glycemic_index: 51,
+    health_notes: {
+      diabetes: 'GI moderate (51). BOLEH dalam jumlah sederhana (sedikit).',
+      uterus: 'Kaya potassium dan vitamin B6.',
+      general: 'Buang tempatan, kaya potassium.',
+    },
+    alternatives: ['Apple', 'Guava'],
+    tips: ['Makan sedikit sahaja', 'Pilih pisang yang tidak terlalu masak', 'Pisang beriani lebih baik'],
+    image_url: '/images/foods/banana.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sweet-potato',
+    name: 'Ubi Keledek',
+    name_english: 'Sweet Potato',
+    description: 'Ubi keledek adalah root vegetable yang GI moderate tapi kaya nutrien. BOLEH dalam jumlah sederhana.',
+    category: 'sayur',
+    status: 'limit',
+    glycemic_index: 63,
+    health_notes: {
+      diabetes: 'GI moderate (63). BOLEH dalam jumlah sederhana. Rebus lebih baik.',
+      uterus: 'Kaya vitamin A dan fiber.',
+      general: 'Root vegetable berkhasiat.',
+    },
+    alternatives: ['Carrot', 'Oatmeal'],
+    tips: ['Rebus atau kukus', 'Makan dalam portion sederhana', 'Jangan goreng'],
+    image_url: '/images/foods/sweet-potato.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'yogurt-sweet',
+    name: 'Yogurt (Biasa)',
+    name_english: 'Regular Yogurt',
+    description: 'Yogurt biasa mengandungi gula. Pilih yogurt tanpa gula atau Greek yogurt.',
+    category: 'snack',
+    status: 'limit',
+    health_notes: {
+      diabetes: 'Yogurt biasa tinggi gula. Pilih yogurt tanpa gula.',
+      uterus: 'Probiotics baik untuk kesihatan.',
+      general: 'Pilih yogurt plain atau Greek yogurt.',
+    },
+    alternatives: ['Greek yogurt plain', 'Yogurt tanpa gula'],
+    tips: ['Pilih yogurt plain atau Greek', 'Tambah buah segar sendiri', 'Elak yogurt dengan gula tambahan'],
+    image_url: '/images/foods/yogurt.png',
+    is_local_malaysian: false,
+  },
+  {
+    id: 'coffee',
+    name: 'Kopi',
+    name_english: 'Coffee',
+    description: 'Kopi boleh diminum tanpa gula. ELAK kopi dengan gula atau susu manis.',
+    category: 'minuman',
+    status: 'limit',
+    health_notes: {
+      diabetes: 'Kopi tanpa gula adalah ok. ELAK kopi manis.',
+      uterus: 'Kopi tanpa gula ok untuk most people.',
+      general: 'Kopi boleh diminum tanpa gula.',
+    },
+    alternatives: ['Green tea', 'Teh herba'],
+    tips: ['Minum kopi tanpa gula atau dengan stevia', 'Elak kopi susu manis', 'Kurangkan jika ada anxiety'],
+    image_url: '/images/foods/coffee.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'curry',
+    name: 'Kari',
+    name_english: 'Curry',
+    description: 'Kari Malaysia boleh tinggi santan dan minyak. Pilih kari yang kurang santan.',
+    category: 'lauk',
+    status: 'limit',
+    health_notes: {
+      diabetes: 'Kari dengan santan tinggi lemak. Kurangkan.',
+      uterus: 'Santan tinggi lemak.',
+      general: 'Pilih kari yang kurang santan.',
+    },
+    alternatives: ['Sup', 'Goreng dengan sedikit minyak'],
+    tips: ['Kurangkan santan', 'Pilih kari dengan lebih sayur', 'Masak dengan kurang minyak'],
+    image_url: '/images/foods/curry.png',
+    is_local_malaysian: true,
+  },
+  {
+    id: 'sambal',
+    name: 'Sambal',
+    name_english: 'Sambal',
+    description: 'Sambal Malaysia boleh tinggi gula dan minyak. Kurangkan.',
+    category: 'lauk',
+    status: 'limit',
+    health_notes: {
+      diabetes: 'Sambal biasanya manis dengan gula. Kurangkan.',
+      uterus: 'Sambal ok dalam jumlah sederhana.',
+      general: 'Sambal popular tapi kurangkan gula.',
+    },
+    alternatives: ['Sambal tanpa gula', 'Chili paste'],
+    tips: ['Kurangkan sambal manis', 'Pilih sambal tanpa gula', 'Makan sedikit sahaja'],
+    image_url: '/images/foods/sambal.png',
+    is_local_malaysian: true,
+  },
+];
+
+// ==========================================
+// HELPER FUNCTIONS
+// ==========================================
+
+export function getFoodsByStatus(status: 'safe' | 'avoid' | 'limit'): FoodItem[] {
+  return FOODS.filter(food => food.status === status);
+}
+
+export function getFoodsByCategory(category: FoodCategory): FoodItem[] {
+  return FOODS.filter(food => food.category === category);
+}
+
+export function getLocalMalaysianFoods(): FoodItem[] {
+  return FOODS.filter(food => food.is_local_malaysian);
+}
+
+export function getFoodById(id: string): FoodItem | undefined {
+  return FOODS.find(food => food.id === id);
+}
+
+export function searchFoods(query: string): FoodItem[] {
+  const lowerQuery = query.toLowerCase();
+  return FOODS.filter(food => 
+    food.name.toLowerCase().includes(lowerQuery) ||
+    food.name_english?.toLowerCase().includes(lowerQuery) ||
+    food.description.toLowerCase().includes(lowerQuery)
+  );
+}
+
+// ==========================================
+// STATISTICS
+// ==========================================
+
+export const FOOD_STATS = {
+  total: FOODS.length,
+  safe: getFoodsByStatus('safe').length,
+  avoid: getFoodsByStatus('avoid').length,
+  limit: getFoodsByStatus('limit').length,
+  local_malaysian: getLocalMalaysianFoods().length,
+};
