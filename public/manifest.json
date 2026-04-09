@@ -60,20 +60,6 @@
       "purpose": "maskable any"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/dashboard.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "Dashboard Utama"
-    },
-    {
-      "src": "/screenshots/food-guide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "Panduan Makanan"
-    }
-  ],
   "shortcuts": [
     {
       "name": "Panduan Makanan",

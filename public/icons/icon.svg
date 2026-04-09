@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="256" fill="#1E3A5F"/>
+
+  <!-- Plate/Bowl -->
+  <ellipse cx="256" cy="280" rx="180" ry="60" fill="#F8FAFC" opacity="0.2"/>
+  <ellipse cx="256" cy="260" rx="180" ry="60" fill="#F8FAFC"/>
+
+  <!-- Leaf/Healthy Food Symbol -->
+  <path d="M256 140c-60 0-100 40-100 100 0 40 30 70 70 80v-20c-30-8-50-30-50-60 0-40 25-70 65-78-30 15-50 45-50 80 0 50 40 90 90 90s90-40 90-90c0-60-55-102-115-102z" fill="#22C55E"/>
+  <path d="M256 140v192c50 0 90-40 90-90 0-55-40-102-90-102z" fill="#16A34A"/>
+
+  <!-- Heart (Health/Care) -->
+  <path d="M256 380c-30 0-55-25-55-55 0-20 12-38 30-48-10 5-18 15-18 28 0 20 18 38 43 38s43-18 43-38c0-13-8-23-18-28 18 10 30 28 30 48 0 30-25 55-55 55z" fill="#F59E0B"/>
+</svg>

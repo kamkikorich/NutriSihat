@@ -22,7 +22,11 @@
       "mcp__context7__query-docs",
       "Bash(npx -y web-push generate-vapid-keys)",
       "mcp__playwright-mcp__browser_navigate",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm list:*)",
+      "Bash(node:*)"
     ],
     "deny": [
       "Bash(rm -rf /*)",
