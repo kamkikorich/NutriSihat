@@ -22,6 +22,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { AI_ASSISTANT, BUTTONS } from '@/lib/constants';
+import ReactMarkdown from 'react-markdown';
 
 export default function AIPage(): JSX.Element {
   const [messages, setMessages] = useState<Array<{
@@ -165,7 +166,13 @@ export default function AIPage(): JSX.Element {
                     }`}>
                       {msg.role === 'user' ? 'Mak' : 'Penasihat AI'}
                     </span>
-                    <p className="text-lg text-primary mt-1">{msg.content}</p>
+                    <div className="text-lg text-primary mt-1 prose prose-lg max-w-none prose-headings:text-primary prose-headings:font-bold prose-h2:text-xl prose-h3:text-lg prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-strong:text-primary prose-strong:font-semibold">
+                      {msg.role === 'assistant' ? (
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      ) : (
+                        <p>{msg.content}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Card>
