@@ -328,6 +328,14 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 /**
+ * Convert VAPID public key to ArrayBuffer for pushManager.subscribe
+ */
+export function urlBase64ToArrayBuffer(base64String: string): ArrayBuffer {
+  const uint8Array = urlBase64ToUint8Array(base64String);
+  return uint8Array.buffer as ArrayBuffer;
+}
+
+/**
  * Subscribe to push notifications
  */
 export async function subscribeToPushNotifications(
@@ -340,9 +348,10 @@ export async function subscribeToPushNotifications(
 
   try {
     const registration = await navigator.serviceWorker.ready;
+    const applicationServerKey = urlBase64ToArrayBuffer(vapidPublicKey);
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+      applicationServerKey,
     });
 
     return subscription;

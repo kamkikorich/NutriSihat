@@ -1,5 +1,5 @@
 // NutriSihat - Ubat (Medicine Reminder) Page
-// Connected to Supabase API
+// Mobile-first design for elderly users
 
 'use client';
 
@@ -8,24 +8,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardInteractive } from '@/components/ui/card';
 import {
-  Home,
-  UtensilsCrossed,
-  Pill,
-  Sparkles,
-  ArrowLeft,
-  Bell,
-  Clock,
-  Plus,
-  Check,
-  AlertTriangle,
-  Loader2,
-  Trash2,
-  Edit,
-  X,
+  Home, UtensilsCrossed, Pill, Sparkles, ArrowLeft, Bell, Clock, Plus, Check, AlertTriangle, Loader2, Trash2, X,
 } from 'lucide-react';
 import { MEDICINE, EMPTY_STATES } from '@/lib/constants';
 
-// Medicine type from database
+// Medicine type
 interface Medicine {
   id: string;
   name: string;
@@ -39,12 +26,11 @@ interface Medicine {
   created_at: string;
 }
 
-// Frequency display mapping
 const frequencyLabels: Record<string, string> = {
-  daily: '1 kali sehari',
-  twice_daily: '2 kali sehari',
-  three_times: '3 kali sehari',
-  weekly: '1 kali seminggu',
+  daily: '1x/hari',
+  twice_daily: '2x/hari',
+  three_times: '3x/hari',
+  weekly: '1x/minggu',
 };
 
 export default function UbatPage(): JSX.Element {
@@ -53,30 +39,17 @@ export default function UbatPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Form state
   const [formData, setFormData] = useState({
-    name: '',
-    dosage: '',
-    frequency: 'daily',
-    times: ['8:00'],
-    notes: '',
-    condition: '',
+    name: '', dosage: '', frequency: 'daily', times: ['8:00'], notes: '', condition: '',
   });
 
-  // Fetch medicines
   const fetchMedicines = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-
       const response = await fetch('/api/medicine');
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Ralat mengambil data ubat');
-      }
-
+      if (!response.ok) throw new Error(data.error || 'Ralat mengambil data ubat');
       setMedicines(data.data || []);
     } catch (err) {
       console.error('Error fetching medicines:', err);
@@ -86,48 +59,28 @@ export default function UbatPage(): JSX.Element {
     }
   }, []);
 
-  useEffect(() => {
-    fetchMedicines();
-  }, [fetchMedicines]);
+  useEffect(() => { fetchMedicines(); }, [fetchMedicines]);
 
-  // Mark medicine as taken
   const handleMarkTaken = async (medicineId: string) => {
     try {
       const response = await fetch(`/api/medicine/${medicineId}/log`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: 'taken',
-          notes: 'Diambil melalui aplikasi',
-        }),
+        body: JSON.stringify({ status: 'taken', notes: 'Diambil melalui aplikasi' }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Ralat menandakan ubat');
-      }
-
-      // Refresh medicines to update taken_today status
+      if (!response.ok) { const result = await response.json(); throw new Error(result.error); }
       fetchMedicines();
     } catch (err) {
       console.error('Error marking medicine as taken:', err);
-      alert(err instanceof Error ? err.message : 'Ralat menandakan ubat');
+      alert(err instanceof Error ? err.message : 'Ralat');
     }
   };
 
-  // Add new medicine
   const handleAddMedicine = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.name || !formData.dosage) {
-      alert('Sila isi nama ubat dan dos');
-      return;
-    }
-
+    if (!formData.name || !formData.dosage) { alert('Sila isi nama ubat dan dos'); return; }
     try {
       setIsSubmitting(true);
-
       const response = await fetch('/api/medicine', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -140,60 +93,30 @@ export default function UbatPage(): JSX.Element {
           condition: formData.condition || null,
         }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Ralat menambah ubat');
-      }
-
-      // Reset form and close
-      setFormData({
-        name: '',
-        dosage: '',
-        frequency: 'daily',
-        times: ['8:00'],
-        notes: '',
-        condition: '',
-      });
+      if (!response.ok) { const data = await response.json(); throw new Error(data.error); }
+      setFormData({ name: '', dosage: '', frequency: 'daily', times: ['8:00'], notes: '', condition: '' });
       setShowAddForm(false);
-
-      // Refresh medicines
       fetchMedicines();
     } catch (err) {
       console.error('Error adding medicine:', err);
-      alert(err instanceof Error ? err.message : 'Ralat menambah ubat');
+      alert(err instanceof Error ? err.message : 'Ralat');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Delete medicine
   const handleDeleteMedicine = async (medicineId: string) => {
-    if (!confirm('Adakah Mak pasti mahu memadam ubat ini?')) {
-      return;
-    }
-
+    if (!confirm('Padam ubat ini?')) return;
     try {
-      const response = await fetch(`/api/medicine/${medicineId}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Ralat memadam ubat');
-      }
-
-      // Refresh medicines
+      const response = await fetch(`/api/medicine/${medicineId}`, { method: 'DELETE' });
+      if (!response.ok) { const data = await response.json(); throw new Error(data.error); }
       fetchMedicines();
     } catch (err) {
       console.error('Error deleting medicine:', err);
-      alert(err instanceof Error ? err.message : 'Ralat memadam ubat');
+      alert(err instanceof Error ? err.message : 'Ralat');
     }
   };
 
-  // Toggle medicine active status
   const handleToggleActive = async (medicineId: string, currentStatus: boolean) => {
     try {
       const response = await fetch(`/api/medicine/${medicineId}`, {
@@ -201,175 +124,97 @@ export default function UbatPage(): JSX.Element {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_active: !currentStatus }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Ralat mengemas kini ubat');
-      }
-
-      // Refresh medicines
+      if (!response.ok) { const data = await response.json(); throw new Error(data.error); }
       fetchMedicines();
     } catch (err) {
       console.error('Error toggling medicine:', err);
-      alert(err instanceof Error ? err.message : 'Ralat mengemas kini ubat');
+      alert(err instanceof Error ? err.message : 'Ralat');
     }
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-background main-content">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-primary text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
+      <header className="page-header">
+        <div className="w-full px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <ArrowLeft size={28} />
-              <span className="text-lg font-semibold">Kembali</span>
+            <Link href="/" className="flex items-center gap-2 touch-target">
+              <ArrowLeft size={24} />
+              <span className="text-base font-semibold hidden sm:inline">Kembali</span>
             </Link>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Pill size={28} />
-              {MEDICINE.title}
+            <h1 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+              <Pill size={24} />
+              <span className="hidden sm:inline">Ubat</span>
             </h1>
-            <div className="w-20" />
+            <div className="w-10" />
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8 space-y-8 animate-fade-in">
-        {/* Welcome Message */}
-        <section className="text-center py-4">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <Bell className="text-accent" size={32} />
-            <h2 className="text-2xl font-bold text-primary">
-              {MEDICINE.description}
-            </h2>
+      {/* Content */}
+      <div className="w-full px-4 py-4 space-y-4 sm:px-6 sm:py-6 sm:space-y-6 animate-fade-in">
+        {/* Welcome */}
+        <section className="text-center py-3">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Bell className="text-accent flex-shrink-0" size={28} />
+            <h2 className="text-lg sm:text-2xl font-bold text-primary">{MEDICINE.description}</h2>
           </div>
-          <p className="text-lg text-primary-light">
-            Peringatan ubat akan membantu Mak mengingat masa untuk ubat.
-          </p>
+          <p className="text-base sm:text-lg text-primary-light">Peringatan ubat membantu ingat masa.</p>
         </section>
 
-        {/* Add Medicine Button */}
+        {/* Add Button */}
         <section className="text-center">
-          <Button
-            variant="accent"
-            size="lg"
-            className="flex items-center gap-3"
-            onClick={() => setShowAddForm(true)}
-          >
-            <Plus size={28} />
-            <span className="text-xl font-bold">{MEDICINE.buttons.add}</span>
+          <Button variant="accent" size="lg" onClick={() => setShowAddForm(true)}>
+            <Plus size={24} className="mr-2" />
+            <span className="text-lg font-bold">{MEDICINE.buttons.add}</span>
           </Button>
         </section>
 
-        {/* Add Medicine Form */}
+        {/* Add Form */}
         {showAddForm && (
-          <section>
-            <Card className="p-6 border-2 border-accent">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-primary">Tambah Ubat Baru</h3>
+          <section className="animate-fade-in">
+            <Card className="p-4 sm:p-5 border-2 border-accent">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-primary">Tambah Ubat</h3>
                 <Button variant="outline" size="sm" onClick={() => setShowAddForm(false)}>
                   <X size={20} />
                 </Button>
               </div>
-
-              <form onSubmit={handleAddMedicine} className="space-y-4">
+              <form onSubmit={handleAddMedicine} className="space-y-3">
                 <div>
-                  <label className="block text-base font-semibold text-primary mb-1">
-                    Nama Ubat *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-primary-100 text-lg"
-                    placeholder="Contoh: Metformin"
-                    required
-                  />
+                  <label className="text-base font-semibold text-primary mb-1 block">Nama Ubat *</label>
+                  <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="w-full px-4 py-2 sm:py-3 rounded-xl border-2 border-primary-100 text-lg" placeholder="Contoh: Metformin" required />
                 </div>
-
                 <div>
-                  <label className="block text-base font-semibold text-primary mb-1">
-                    Dos *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.dosage}
-                    onChange={(e) => setFormData({ ...formData, dosage: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-primary-100 text-lg"
-                    placeholder="Contoh: 1 tablet 500mg"
-                    required
-                  />
+                  <label className="text-base font-semibold text-primary mb-1 block">Dos *</label>
+                  <input type="text" value={formData.dosage} onChange={(e) => setFormData({ ...formData, dosage: e.target.value })}
+                    className="w-full px-4 py-2 sm:py-3 rounded-xl border-2 border-primary-100 text-lg" placeholder="1 tablet 500mg" required />
                 </div>
-
                 <div>
-                  <label className="block text-base font-semibold text-primary mb-1">
-                    Kekerapan
-                  </label>
-                  <select
-                    value={formData.frequency}
-                    onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-primary-100 text-lg"
-                  >
-                    <option value="daily">1 kali sehari</option>
-                    <option value="twice_daily">2 kali sehari</option>
-                    <option value="three_times">3 kali sehari</option>
-                    <option value="weekly">1 kali seminggu</option>
+                  <label className="text-base font-semibold text-primary mb-1 block">Kekerapan</label>
+                  <select value={formData.frequency} onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+                    className="w-full px-4 py-2 sm:py-3 rounded-xl border-2 border-primary-100 text-lg">
+                    <option value="daily">1x sehari</option>
+                    <option value="twice_daily">2x sehari</option>
+                    <option value="three_times">3x sehari</option>
+                    <option value="weekly">1x seminggu</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-base font-semibold text-primary mb-1">
-                    Masa (contoh: 8:00 pagi)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.times.join(', ')}
-                    onChange={(e) => setFormData({ ...formData, times: e.target.value.split(',').map(t => t.trim()) })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-primary-100 text-lg"
-                    placeholder="8:00 pagi, 8:00 malam"
-                  />
+                  <label className="text-base font-semibold text-primary mb-1 block">Masa</label>
+                  <input type="text" value={formData.times.join(', ')} onChange={(e) => setFormData({ ...formData, times: e.target.value.split(',').map(t => t.trim()) })}
+                    className="w-full px-4 py-2 sm:py-3 rounded-xl border-2 border-primary-100 text-lg" placeholder="8:00 pagi" />
                 </div>
-
                 <div>
-                  <label className="block text-base font-semibold text-primary mb-1">
-                    Catatan (pilihan)
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-primary-100 text-lg"
-                    placeholder="Contoh: Dimakan selepas makan"
-                  />
+                  <label className="text-base font-semibold text-primary mb-1 block">Catatan</label>
+                  <input type="text" value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="w-full px-4 py-2 sm:py-3 rounded-xl border-2 border-primary-100 text-lg" placeholder="Selepas makan" />
                 </div>
-
-                <div className="flex gap-4 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="lg"
-                    className="flex-1"
-                    onClick={() => setShowAddForm(false)}
-                  >
-                    Batal
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="accent"
-                    size="lg"
-                    className="flex-1"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 size={20} className="animate-spin" />
-                        Menambah...
-                      </>
-                    ) : (
-                      'Tambah Ubat'
-                    )}
+                <div className="flex gap-3">
+                  <Button type="button" variant="outline" size="lg" className="flex-1" onClick={() => setShowAddForm(false)}>Batal</Button>
+                  <Button type="submit" variant="accent" size="lg" className="flex-1" disabled={isSubmitting}>
+                    {isSubmitting ? <><Loader2 className="animate-spin mr-2" size={20} />Menambah...</> : 'Tambah'}
                   </Button>
                 </div>
               </form>
@@ -377,114 +222,70 @@ export default function UbatPage(): JSX.Element {
           </section>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {error && (
-          <Card className="p-6 border-2 border-error bg-error/5">
-            <div className="flex items-center gap-4">
-              <AlertTriangle className="text-error" size={28} />
-              <div>
-                <p className="text-lg text-error">{error}</p>
-                <Button variant="outline" size="sm" onClick={fetchMedicines} className="mt-2">
-                  Cuba Lagi
-                </Button>
-              </div>
+          <Card className="p-4 border-2 border-error bg-error/5">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="text-error flex-shrink-0" size={24} />
+              <p className="text-base text-error">{error}</p>
+              <Button variant="outline" size="sm" onClick={fetchMedicines} className="ml-auto">Cuba Lagi</Button>
             </div>
           </Card>
         )}
 
-        {/* Loading State */}
+        {/* Loading */}
         {isLoading && (
-          <div className="text-center py-12">
-            <Loader2 size={48} className="animate-spin text-accent mx-auto" />
-            <p className="text-lg text-primary mt-4">Memuatkan data ubat...</p>
+          <div className="text-center py-8">
+            <Loader2 size={32} className="animate-spin text-accent mx-auto" />
+            <p className="text-base text-primary mt-3">Memuatkan...</p>
           </div>
         )}
 
         {/* Medicine List */}
         {!isLoading && !error && (
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-primary">Senarai Ubat Mak</h2>
-
+          <section className="space-y-3">
+            <h2 className="text-lg sm:text-xl font-bold text-primary">Senarai Ubat</h2>
             {medicines.length === 0 ? (
-              <Card className="p-8 text-center">
-                <div className="text-4xl mb-4">💊</div>
-                <h3 className="text-xl font-bold text-primary mb-2">
-                  {EMPTY_STATES.medicine.title}
-                </h3>
-                <p className="text-lg text-primary-light">
-                  {EMPTY_STATES.medicine.description}
-                </p>
-                <Button
-                  variant="accent"
-                  size="lg"
-                  className="mt-4"
-                  onClick={() => setShowAddForm(true)}
-                >
-                  {EMPTY_STATES.medicine.action}
-                </Button>
+              <Card className="p-6 text-center">
+                <div className="text-3xl mb-3">💊</div>
+                <h3 className="text-lg font-bold text-primary mb-2">{EMPTY_STATES.medicine.title}</h3>
+                <p className="text-base text-primary-light">{EMPTY_STATES.medicine.description}</p>
+                <Button variant="accent" size="lg" className="mt-3" onClick={() => setShowAddForm(true)}>{EMPTY_STATES.medicine.action}</Button>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {medicines.map((med) => (
-                  <CardInteractive
-                    key={med.id}
-                    className={`p-6 ${!med.is_active ? 'opacity-60' : ''}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0 w-16 h-16 rounded-lg bg-accent/20 flex items-center justify-center">
-                        <Pill size={32} className="text-accent" />
+                  <CardInteractive key={med.id} className={`p-4 sm:p-5 ${!med.is_active ? 'opacity-60' : ''}`}>
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-accent/20 flex items-center justify-center">
+                        <Pill size={28} className="text-accent" />
                       </div>
-                      <div className="flex-grow">
-                        <h3 className="text-xl font-bold text-primary mb-1">
+                      <div className="flex-grow min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold text-primary">
                           {med.name}
-                          {med.taken_today && (
-                            <span className="ml-2 text-base text-success font-normal">
-                              ✓ Sudah diambil hari ini
-                            </span>
-                          )}
+                          {med.taken_today && <span className="ml-2 text-xs sm:text-sm text-success font-normal">✓ Sudah</span>}
                         </h3>
-                        <p className="text-base text-primary-light">
-                          {med.dosage} • {frequencyLabels[med.frequency] || med.frequency}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Clock size={20} className="text-primary-light" />
-                          <span className="text-base text-primary">
-                            Masa: {med.times.join(', ')}
-                          </span>
+                        <p className="text-sm sm:text-base text-primary-light">{med.dosage} • {frequencyLabels[med.frequency] || med.frequency}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Clock size={16} className="text-primary-light" />
+                          <span className="text-sm text-primary">{med.times.join(', ')}</span>
                         </div>
-                        {med.notes && (
-                          <p className="text-sm text-primary-light mt-1 italic">
-                            {med.notes}
-                          </p>
-                        )}
+                        {med.notes && <p className="text-xs text-primary-light mt-1 italic">{med.notes}</p>}
                       </div>
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-2 flex-shrink-0">
                         {med.is_active && !med.taken_today && (
-                          <Button
-                            variant="success"
-                            size="sm"
-                            className="flex items-center gap-2"
-                            onClick={() => handleMarkTaken(med.id)}
-                          >
-                            <Check size={20} />
-                            {MEDICINE.buttons.mark_taken}
+                          <Button variant="success" size="sm" onClick={() => handleMarkTaken(med.id)}>
+                            <Check size={16} className="mr-1" />{MEDICINE.buttons.mark_taken}
                           </Button>
                         )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleToggleActive(med.id, med.is_active)}
-                        >
-                          {med.is_active ? 'Tidaktifkan' : 'Aktifkan'}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-error"
-                          onClick={() => handleDeleteMedicine(med.id)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
+                        <div className="flex gap-1">
+                          <Button variant="outline" size="sm" onClick={() => handleToggleActive(med.id, med.is_active)}>
+                            {med.is_active ? 'Off' : 'On'}
+                          </Button>
+                          <Button variant="outline" size="sm" className="text-error" onClick={() => handleDeleteMedicine(med.id)}>
+                            <Trash2 size={16} />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardInteractive>
@@ -494,43 +295,35 @@ export default function UbatPage(): JSX.Element {
           </section>
         )}
 
-        {/* Important Note */}
+        {/* Note */}
         <section>
-          <Card className="p-6 border-2 border-warning bg-warning/5">
-            <div className="flex items-start gap-4">
-              <AlertTriangle className="text-warning" size={28} />
+          <Card className="p-4 border-2 border-warning bg-warning/5">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="text-warning flex-shrink-0" size={24} />
               <div>
-                <h3 className="text-lg font-bold text-warning-dark mb-1">
-                  Peringatan
-                </h3>
-                <p className="text-base text-primary">
-                  Mak, pastikan ubat diambil pada masa yang tepat. Jangan lupa minum ubat!
-                </p>
+                <h3 className="text-base font-bold text-warning-dark mb-1">Peringatan</h3>
+                <p className="text-sm sm:text-base text-primary">Pastikan ubat diambil pada masa yang tepat.</p>
               </div>
             </div>
           </Card>
         </section>
       </div>
 
-      {/* Bottom Navigation */}
-      <nav className="sticky bottom-0 z-50 bg-white border-t-2 border-primary-100 shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-4 gap-2 py-3">
-            <Link href="/" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <Home size={28} />
-              <span className="text-base font-semibold">Utama</span>
+      {/* Bottom Nav */}
+      <nav className="bottom-nav">
+        <div className="w-full px-2 sm:px-4">
+          <div className="grid grid-cols-4 gap-1 py-2">
+            <Link href="/" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <Home size={24} /><span className="text-xs sm:text-sm font-semibold">Utama</span>
             </Link>
-            <Link href="/makanan" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <UtensilsCrossed size={28} />
-              <span className="text-base font-semibold">Makanan</span>
+            <Link href="/makanan" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <UtensilsCrossed size={24} /><span className="text-xs sm:text-sm font-semibold">Makanan</span>
             </Link>
-            <Link href="/ubat" className="flex flex-col items-center gap-1 py-2 rounded-xl bg-primary text-white">
-              <Pill size={28} />
-              <span className="text-base font-semibold">Ubat</span>
+            <Link href="/ubat" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl bg-primary text-white min-h-[56px]">
+              <Pill size={24} /><span className="text-xs sm:text-sm font-semibold">Ubat</span>
             </Link>
-            <Link href="/ai" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <Sparkles size={28} />
-              <span className="text-base font-semibold">Tanya AI</span>
+            <Link href="/ai" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <Sparkles size={24} /><span className="text-xs sm:text-sm font-semibold">AI</span>
             </Link>
           </div>
         </div>

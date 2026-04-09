@@ -1,14 +1,13 @@
 // Reminders API Route
 // CRUD operations for user reminders
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 // GET /api/reminders - Get all reminders for the current user
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },
@@ -42,7 +41,7 @@ export async function GET() {
 // POST /api/reminders - Create a new reminder
 export async function POST(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },
@@ -106,7 +105,7 @@ export async function POST(request: Request) {
 // PUT /api/reminders - Update a reminder
 export async function PUT(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },
@@ -170,7 +169,7 @@ export async function PUT(request: Request) {
 // DELETE /api/reminders - Delete a reminder
 export async function DELETE(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },

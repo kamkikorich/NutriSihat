@@ -1,5 +1,5 @@
 // NutriSihat - Card Component
-// Large, clear card for elderly users with high contrast
+// Mobile-first, large, clear card for elderly users with high contrast
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,8 @@ const Card = React.forwardRef<
     ref={ref}
     className={cn(
       'rounded-xl border-2 border-primary-100 bg-white shadow-lg transition-all duration-200',
+      // Mobile-first padding
+      'p-4 sm:p-5 md:p-6',
       className
     )}
     {...props}
@@ -25,7 +27,12 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex flex-col space-y-3 p-6', className)}
+    className={cn(
+      'flex flex-col space-y-2 sm:space-y-3',
+      // Mobile-first padding
+      'p-4 sm:p-5 md:p-6',
+      className
+    )}
     {...props}
   />
 ));
@@ -38,7 +45,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      'text-2xl font-bold leading-none tracking-tight text-primary',
+      'text-lg sm:text-xl md:text-2xl font-bold leading-tight tracking-tight text-primary',
       className
     )}
     {...props}
@@ -52,7 +59,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-lg text-primary-light', className)}
+    className={cn('text-base sm:text-lg text-primary-light', className)}
     {...props}
   />
 ));
@@ -62,7 +69,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+  <div ref={ref} className={cn('p-4 sm:p-5 md:p-6 pt-0', className)} {...props} />
 ));
 CardContent.displayName = 'CardContent';
 
@@ -72,13 +79,13 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('flex items-center p-6 pt-0', className)}
+    className={cn('flex items-center p-4 sm:p-5 md:p-6 pt-0', className)}
     {...props}
   />
 ));
 CardFooter.displayName = 'CardFooter';
 
-// Interactive Card - clickable with hover effects
+// Interactive Card - Mobile-first clickable with touch feedback
 const CardInteractive = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -88,8 +95,14 @@ const CardInteractive = React.forwardRef<
     className={cn(
       'rounded-xl border-2 border-primary-100 bg-white shadow-lg',
       'cursor-pointer transition-all duration-200',
-      'hover:shadow-xl hover:border-primary-200 hover:scale-[1.02]',
+      // Mobile-first padding
+      'p-4 sm:p-5',
+      // Hover effects (desktop)
+      'hover:shadow-xl hover:border-primary-200',
+      // Touch feedback (mobile)
       'active:scale-[0.98]',
+      // Tap highlight
+      'touch-manipulation',
       className
     )}
     {...props}
@@ -97,4 +110,12 @@ const CardInteractive = React.forwardRef<
 ));
 CardInteractive.displayName = 'CardInteractive';
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, CardInteractive };
+export { 
+  Card, 
+  CardHeader, 
+  CardFooter, 
+  CardTitle, 
+  CardDescription, 
+  CardContent, 
+  CardInteractive 
+};

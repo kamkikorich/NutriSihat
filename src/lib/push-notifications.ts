@@ -29,6 +29,14 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array {
 }
 
 /**
+ * Convert VAPID public key to ArrayBuffer for pushManager.subscribe
+ */
+export function urlBase64ToArrayBuffer(base64String: string): ArrayBuffer {
+  const uint8Array = urlBase64ToUint8Array(base64String);
+  return uint8Array.buffer as ArrayBuffer;
+}
+
+/**
  * Check if push notifications are supported
  */
 export function isPushSupported(): boolean {
@@ -57,10 +65,13 @@ export async function subscribeToPushNotifications(): Promise<PushSubscription |
     // Get service worker registration
     const registration = await navigator.serviceWorker.ready;
 
+    // Convert VAPID key to ArrayBuffer for type compatibility
+    const applicationServerKey = urlBase64ToArrayBuffer(VAPID_PUBLIC_KEY);
+
     // Subscribe to push
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      applicationServerKey,
     });
 
     // Convert to JSON format

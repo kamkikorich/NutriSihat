@@ -8,6 +8,14 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    // Mobile-first breakpoints (min-width, not max-width)
+    screens: {
+      'sm': '480px',   // Small phones landscape
+      'md': '768px',   // Tablets
+      'lg': '1024px',  // Desktop
+      'xl': '1280px',  // Large desktop
+      '2xl': '1536px', // Extra large
+    },
     extend: {
       colors: {
         // NutriSihat Color Palette - High Contrast for Elderly
@@ -92,10 +100,10 @@ const config: Config = {
         foreground: '#1E3A5F',
       },
       fontSize: {
-        // Large fonts for elderly users - minimum 16px/18px
+        // Large fonts for elderly users - minimum 16px, default 18px
         'xs': ['14px', { lineHeight: '1.5' }],
-        'sm': ['16px', { lineHeight: '1.5' }],
-        'base': ['18px', { lineHeight: '1.6' }], // Minimum 18px
+        'sm': ['16px', { lineHeight: '1.5' }],  // Mobile minimum
+        'base': ['18px', { lineHeight: '1.6' }], // Default for elderly
         'lg': ['20px', { lineHeight: '1.6' }],
         'xl': ['24px', { lineHeight: '1.5' }],
         '2xl': ['28px', { lineHeight: '1.4' }],
@@ -104,10 +112,20 @@ const config: Config = {
         '5xl': ['48px', { lineHeight: '1.1' }],
       },
       spacing: {
-        // Larger spacing for touch-friendly buttons
-        'button': '48px', // Minimum button height for touch
+        // Touch-friendly button sizes
+        'button': '48px',  // Minimum touch target
+        'button-sm': '44px',
         'button-lg': '56px',
         'button-xl': '64px',
+        'touch': '48px',  // Minimum touch target size
+      },
+      minHeight: {
+        'touch': '48px',  // Minimum touch target height
+        'touch-lg': '56px',
+        'touch-xl': '64px',
+      },
+      minWidth: {
+        'touch': '48px',  // Minimum touch target width
       },
       borderRadius: {
         'lg': 'var(--radius)',
@@ -115,6 +133,7 @@ const config: Config = {
         'sm': 'calc(var(--radius) - 4px)',
       },
       borderWidth: {
+        '2': '2px',
         '3': '3px',
       },
       keyframes: {

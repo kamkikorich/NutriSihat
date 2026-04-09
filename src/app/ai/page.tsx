@@ -1,255 +1,171 @@
 // NutriSihat - AI Assistant Page
-// Ollama AI integration placeholder
+// Mobile-first design for elderly users
 
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardInteractive } from '@/components/ui/card';
-import {
-  Home,
-  UtensilsCrossed,
-  Pill,
-  Sparkles,
-  ChevronRight,
-  ArrowLeft,
-  Send,
-  Bot,
-  User,
-  Loader2,
-  MessageCircle,
-  RefreshCw,
-} from 'lucide-react';
-import { AI_ASSISTANT, BUTTONS } from '@/lib/constants';
+import { Card } from '@/components/ui/card';
+import { Home, UtensilsCrossed, Pill, Sparkles, ArrowLeft, Send, Bot, User, Loader2, MessageCircle } from 'lucide-react';
+import { AI_ASSISTANT } from '@/lib/constants';
 import ReactMarkdown from 'react-markdown';
 
 export default function AIPage(): JSX.Element {
-  const [messages, setMessages] = useState<Array<{
-    role: 'user' | 'assistant';
-    content: string;
-  }>>([
-    {
-      role: 'assistant',
-      content: AI_ASSISTANT.greeting_detail,
-    },
+  const [messages, setMessages] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([
+    { role: 'assistant', content: AI_ASSISTANT.greeting_detail },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  // Handle send message
+
   const handleSend = async () => {
     if (!input.trim()) return;
-
     const userMessage = input.trim();
     setInput('');
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
     try {
-      // Call real AI API
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'user',
-              content: userMessage,
-            },
-          ],
-          userId: 'anonymous', // Can be replaced with actual user ID when logged in
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [{ role: 'user', content: userMessage }], userId: 'anonymous' }),
       });
-
       const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.error || 'Failed to get AI response');
-      }
-
+      if (!response.ok || !data.success) throw new Error(data.error || 'Failed');
       setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
     } catch (error) {
       console.error('AI Chat Error:', error);
-      // Fallback response on error
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'Maaf, terdapat masalah sambungan. Sila cuba lagi sebentar lagi.'
-      }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Maaf, masalah sambungan. Cuba lagi.' }]);
     } finally {
       setIsLoading(false);
     }
   };
-  
-  // Handle suggestion click
-  const handleSuggestion = (suggestion: string) => {
-    setInput(suggestion);
-  };
-  
+
+  const handleSuggestion = (suggestion: string) => setInput(suggestion);
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+    <main className="min-h-screen bg-gradient-to-b from-primary-50 to-background main-content">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-primary text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
+      <header className="page-header">
+        <div className="w-full px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <ArrowLeft size={28} />
-              <span className="text-lg font-semibold">Kembali</span>
+            <Link href="/" className="flex items-center gap-2 touch-target">
+              <ArrowLeft size={24} />
+              <span className="text-base font-semibold hidden sm:inline">Kembali</span>
             </Link>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <Sparkles size={28} />
-              {AI_ASSISTANT.title}
+            <h1 className="text-lg sm:text-xl font-bold flex items-center gap-2">
+              <Sparkles size={24} />
+              <span className="hidden sm:inline">{AI_ASSISTANT.title}</span>
+              <span className="sm:hidden">AI</span>
             </h1>
-            <div className="w-20" />
+            <div className="w-10" />
           </div>
         </div>
       </header>
-      
-      {/* Main Content */}
-      <div className="container mx-auto px-6 py-8 space-y-6 animate-fade-in pb-32">
+
+      {/* Content */}
+      <div className="w-full px-4 py-4 space-y-4 sm:px-6 sm:py-6 animate-fade-in pb-36">
         {/* Welcome */}
-        <section className="text-center py-4">
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <Bot className="text-accent" size={40} />
-            <h2 className="text-2xl font-bold text-primary">
-              {AI_ASSISTANT.description}
-            </h2>
+        <section className="text-center py-3">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Bot className="text-accent flex-shrink-0" size={32} />
+            <h2 className="text-lg sm:text-2xl font-bold text-primary">{AI_ASSISTANT.description}</h2>
           </div>
-          <p className="text-lg text-primary-light">
-            {AI_ASSISTANT.greeting}
-          </p>
+          <p className="text-base sm:text-lg text-primary-light">{AI_ASSISTANT.greeting}</p>
         </section>
-        
+
         {/* Suggestions */}
-        <section className="space-y-3">
-          <h3 className="text-xl font-bold text-primary flex items-center gap-2">
-            <MessageCircle size={24} />
-            Cadangan Soalan:
+        <section className="space-y-2">
+          <h3 className="text-base sm:text-lg font-bold text-primary flex items-center gap-2">
+            <MessageCircle size={20} /> Cadangan:
           </h3>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2">
             {AI_ASSISTANT.suggestions.map((suggestion, i) => (
-              <Button
-                key={i}
-                variant="outline"
-                size="sm"
-                onClick={() => handleSuggestion(suggestion)}
-                className="text-base"
-              >
+              <Button key={i} variant="outline" size="sm" onClick={() => handleSuggestion(suggestion)} className="text-sm">
                 {suggestion}
               </Button>
             ))}
           </div>
         </section>
-        
-        {/* Chat Messages */}
-        <section className="space-y-4">
-          <div className="space-y-4 max-h-[50vh] overflow-y-auto">
+
+        {/* Chat */}
+        <section className="space-y-3">
+          <div className="space-y-3 max-h-[50vh] overflow-y-auto">
             {messages.map((msg, i) => (
-              <Card key={i} className={`p-5 ${
-                msg.role === 'user' ? 'bg-primary-50 ml-12' : 'bg-white mr-12'
-              }`}>
-                <div className="flex items-start gap-3">
-                  <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${
-                    msg.role === 'user' ? 'bg-primary' : 'bg-accent'
-                  }`}>
-                    {msg.role === 'user' ? (
-                      <User size={24} className="text-white" />
-                    ) : (
-                      <Bot size={24} className="text-primary" />
-                    )}
+              <Card key={i} className={`p-3 sm:p-4 ${msg.role === 'user' ? 'bg-primary-50 ml-8 sm:ml-12' : 'bg-white mr-8 sm:mr-12'}`}>
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className={`flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center ${msg.role === 'user' ? 'bg-primary' : 'bg-accent'}`}>
+                    {msg.role === 'user' ? <User size={20} className="text-white" /> : <Bot size={20} className="text-primary" />}
                   </div>
-                  <div className="flex-grow">
-                    <span className={`text-base font-semibold ${
-                      msg.role === 'user' ? 'text-primary' : 'text-accent-dark'
-                    }`}>
-                      {msg.role === 'user' ? 'Mak' : 'Penasihat AI'}
+                  <div className="flex-grow min-w-0">
+                    <span className={`text-sm font-semibold ${msg.role === 'user' ? 'text-primary' : 'text-accent-dark'}`}>
+                      {msg.role === 'user' ? 'Mak' : 'AI'}
                     </span>
-                    <div className="text-lg text-primary mt-1 prose prose-lg max-w-none prose-headings:text-primary prose-headings:font-bold prose-h2:text-xl prose-h3:text-lg prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1 prose-strong:text-primary prose-strong:font-semibold">
-                      {msg.role === 'assistant' ? (
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                      ) : (
-                        <p>{msg.content}</p>
-                      )}
+                    <div className="text-base text-primary mt-1 prose prose-sm max-w-none prose-headings:text-primary prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
+                      {msg.role === 'assistant' ? <ReactMarkdown>{msg.content}</ReactMarkdown> : <p>{msg.content}</p>}
                     </div>
                   </div>
                 </div>
               </Card>
             ))}
-            
-            {/* Loading indicator */}
             {isLoading && (
-              <Card className="p-5 bg-white mr-12">
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-accent flex items-center justify-center">
-                    <Bot size={24} className="text-primary" />
+              <Card className="p-3 sm:p-4 bg-white mr-8 sm:mr-12">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-accent flex items-center justify-center">
+                    <Bot size={20} className="text-primary" />
                   </div>
                   <div className="flex items-center gap-2">
-                    <Loader2 size={24} className="animate-spin text-accent" />
-                    <span className="text-lg text-primary">{AI_ASSISTANT.messages.thinking}</span>
+                    <Loader2 size={20} className="animate-spin text-accent" />
+                    <span className="text-base text-primary">{AI_ASSISTANT.messages.thinking}</span>
                   </div>
                 </div>
               </Card>
             )}
           </div>
         </section>
-        
+
         {/* Disclaimer */}
         <section>
-          <Card className="p-4 bg-accent/10 border-2 border-accent">
-            <p className="text-base text-primary">
-              {AI_ASSISTANT.disclaimer}
-            </p>
+          <Card className="p-3 sm:p-4 bg-accent/10 border-2 border-accent">
+            <p className="text-sm sm:text-base text-primary">{AI_ASSISTANT.disclaimer}</p>
           </Card>
         </section>
       </div>
-      
-      {/* Input Bar - Fixed at bottom */}
-      <div className="fixed bottom-16 left-0 right-0 bg-white border-t-2 border-primary-100 shadow-lg p-4 z-40">
-        <div className="container mx-auto">
-          <div className="flex items-center gap-4">
+
+      {/* Input Bar - Fixed */}
+      <div className="fixed bottom-16 left-0 right-0 bg-white border-t-2 border-primary-100 shadow-lg p-3 sm:p-4 z-40 safe-bottom">
+        <div className="w-full max-w-4xl mx-auto">
+          <div className="flex items-center gap-2 sm:gap-3">
             <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
+              type="text" value={input} onChange={(e) => setInput(e.target.value)}
               placeholder={AI_ASSISTANT.placeholder}
-              className="flex-grow min-h-[56px] px-6 rounded-xl border-2 border-primary-100 text-lg text-primary placeholder:text-primary-light focus:border-primary"
+              className="flex-grow min-h-[48px] sm:min-h-[52px] px-4 rounded-xl border-2 border-primary-100 text-base sm:text-lg text-primary"
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             />
-            <Button
-              variant="accent"
-              size="lg"
-              onClick={handleSend}
-              disabled={isLoading || !input.trim()}
-              className="flex items-center gap-2"
-            >
-              <Send size={24} />
-              {AI_ASSISTANT.buttons.send}
+            <Button variant="accent" size="lg" onClick={handleSend} disabled={isLoading || !input.trim()}>
+              <Send size={20} className="sm:mr-1" />
+              <span className="hidden sm:inline">{AI_ASSISTANT.buttons.send}</span>
             </Button>
           </div>
         </div>
       </div>
-      
-      {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-primary-100 shadow-lg">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-4 gap-2 py-3">
-            <Link href="/" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <Home size={28} />
-              <span className="text-base font-semibold">Utama</span>
+
+      {/* Bottom Nav */}
+      <nav className="bottom-nav">
+        <div className="w-full px-2 sm:px-4">
+          <div className="grid grid-cols-4 gap-1 py-2">
+            <Link href="/" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <Home size={24} /><span className="text-xs sm:text-sm font-semibold">Utama</span>
             </Link>
-            <Link href="/makanan" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <UtensilsCrossed size={28} />
-              <span className="text-base font-semibold">Makanan</span>
+            <Link href="/makanan" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <UtensilsCrossed size={24} /><span className="text-xs sm:text-sm font-semibold">Makanan</span>
             </Link>
-            <Link href="/ubat" className="flex flex-col items-center gap-1 py-2 rounded-xl text-primary hover:bg-primary-5 transition-colors">
-              <Pill size={28} />
-              <span className="text-base font-semibold">Ubat</span>
+            <Link href="/ubat" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 min-h-[56px]">
+              <Pill size={24} /><span className="text-xs sm:text-sm font-semibold">Ubat</span>
             </Link>
-            <Link href="/ai" className="flex flex-col items-center gap-1 py-2 rounded-xl bg-primary text-white">
-              <Sparkles size={28} />
-              <span className="text-base font-semibold">Tanya AI</span>
+            <Link href="/ai" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl bg-primary text-white min-h-[56px]">
+              <Sparkles size={24} /><span className="text-xs sm:text-sm font-semibold">AI</span>
             </Link>
           </div>
         </div>

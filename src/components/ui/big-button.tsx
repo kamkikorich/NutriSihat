@@ -1,12 +1,13 @@
 'use client';
 
 import { forwardRef, ButtonHTMLAttributes } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface BigButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: React.ReactNode;
   size?: 'md' | 'lg' | 'xl';
+  variant?: ButtonProps['variant'];
 }
 
 export const BigButton = forwardRef<HTMLButtonElement, BigButtonProps>(

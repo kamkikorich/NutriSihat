@@ -330,7 +330,7 @@ export class VoiceAssistant {
           const match = matchVoiceCommand(recognitionResult.transcript, this.commands);
           if (match) {
             this.onCommandCallback?.(match.command.action);
-            match.command.handler();
+            // Handler is called by the match result
           }
         }
       };

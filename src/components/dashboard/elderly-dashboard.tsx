@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import {
   Utensils,
@@ -48,7 +48,7 @@ interface Reminder {
 
 export function ElderlyDashboard({ user }: DashboardProps) {
   const router = useRouter();
-  const supabase = createClientComponentClient();
+  const supabase = createClient();
 
   const [dailyTip, setDailyTip] = useState<DailyTip | null>(null);
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -215,11 +215,11 @@ export function ElderlyDashboard({ user }: DashboardProps) {
               <VoiceButton
                 onVoiceCommand={handleVoiceCommand}
                 textToRead={dailyTip?.tip_text}
-                size="xl"
+                size="lg"
                 className="h-24 w-24"
               />
               <p className="text-sm text-center text-muted-foreground">
-                Contoh: "Baca tip hari ini", "Makanan", "Ubat"
+                {`Contoh: "Baca tip hari ini", "Makanan", "Ubat"`}
               </p>
             </div>
           </CardContent>
@@ -231,7 +231,7 @@ export function ElderlyDashboard({ user }: DashboardProps) {
             icon={<Utensils className="h-10 w-10" />}
             onClick={() => router.push('/makanan')}
             className="bg-orange-500 hover:bg-orange-600 text-white"
-            size="xl"
+            size="lg"
           >
             Makanan
           </BigButton>
@@ -240,7 +240,7 @@ export function ElderlyDashboard({ user }: DashboardProps) {
             icon={<Pill className="h-10 w-10" />}
             onClick={() => router.push('/ubat')}
             className="bg-purple-500 hover:bg-purple-600 text-white"
-            size="xl"
+            size="lg"
           >
             Ubat
           </BigButton>
@@ -249,7 +249,7 @@ export function ElderlyDashboard({ user }: DashboardProps) {
             icon={<Droplets className="h-10 w-10" />}
             onClick={() => router.push('/gula-darah')}
             className="bg-red-500 hover:bg-red-600 text-white"
-            size="xl"
+            size="lg"
           >
             Gula Darah
           </BigButton>
@@ -258,7 +258,7 @@ export function ElderlyDashboard({ user }: DashboardProps) {
             icon={<MessageCircle className="h-10 w-10" />}
             onClick={() => router.push('/ai-chat')}
             className="bg-blue-500 hover:bg-blue-600 text-white"
-            size="xl"
+            size="lg"
           >
             Tanya AI
           </BigButton>

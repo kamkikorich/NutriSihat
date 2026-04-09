@@ -16,7 +16,13 @@
       "WebSearch",
       "mcp__tavily__tavily_search",
       "Bash(npx supabase:*)",
-      "Bash(npx web-push:*)"
+      "Bash(npx web-push:*)",
+      "mcp__playwright-mcp__browser_snapshot",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(npx -y web-push generate-vapid-keys)",
+      "mcp__playwright-mcp__browser_navigate",
+      "Bash(git add:*)"
     ],
     "deny": [
       "Bash(rm -rf /*)",

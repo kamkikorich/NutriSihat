@@ -1,14 +1,13 @@
 // Push Subscription API Route
 // Handles saving and removing push subscriptions for users
 
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 // POST /api/push/subscribe - Save a push subscription
 export async function POST(request: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },
@@ -57,7 +56,7 @@ export async function POST(request: Request) {
 // DELETE /api/push/subscribe - Remove a push subscription
 export async function DELETE() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },
@@ -90,7 +89,7 @@ export async function DELETE() {
 // GET /api/push/subscribe - Check subscription status
 export async function GET() {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
 
     const {
       data: { session },

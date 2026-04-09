@@ -21,9 +21,9 @@ interface DailyTipCardProps {
 
 const categoryIcons: Record<string, string> = {
   general: '💡',
-  diabetes: '🩸',
+  diabetes: '🧪',
   hypertension: '❤️',
-  heart: '💓',
+  heart: '💗',
   kidney: '🫘',
 };
 
@@ -43,17 +43,21 @@ export function DailyTipCard({ tip, onRefresh, className }: DailyTipCardProps) {
     setIsSupported(isTTSSupported());
   }, []);
 
-  const handleSpeak = () => {
+  const handleSpeak = async () => {
     if (!tip?.tip_text || !isSupported) return;
 
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
     } else {
-      speak(tip.tip_text, {
-        onEnd: () => setIsSpeaking(false),
-      });
       setIsSpeaking(true);
+      try {
+        await speak(tip.tip_text);
+      } catch (error) {
+        console.error('TTS error:', error);
+      } finally {
+        setIsSpeaking(false);
+      }
     }
   };
 

@@ -36,12 +36,14 @@ export const metadata: Metadata = {
   },
 };
 
+// Mobile-first viewport settings
 export const viewport: Viewport = {
   themeColor: '#1E3A5F',
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false, // Prevent zooming for elderly-friendly interface
+  maximumScale: 5, // Allow zoom for accessibility
+  userScalable: true, // Allow zoom for elderly users who need larger text
+  viewportFit: 'cover', // Support for notched devices
 };
 
 export default function RootLayout({
@@ -56,6 +58,8 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
+        {/* Safe area support for notched devices */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body className={`${inter.className} antialiased bg-background text-foreground min-h-screen`}>
         <main className="min-h-screen">

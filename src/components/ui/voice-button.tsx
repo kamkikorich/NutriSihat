@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { speak, stopSpeaking, isTTSSupported } from '@/lib/voice';
@@ -17,6 +17,30 @@ interface VoiceButtonProps {
   showTTS?: boolean;
 }
 
+// SpeechRecognition types
+interface SpeechRecognitionEvent {
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+        confidence: number;
+      };
+      isFinal: boolean;
+    };
+  };
+}
+
+interface SpeechRecognitionInstance {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onend: () => void;
+  onerror: (event: { error: string }) => void;
+  start: () => void;
+  stop: () => void;
+}
+
 export function VoiceButton({
   onVoiceCommand,
   onListenStart,
@@ -30,21 +54,24 @@ export function VoiceButton({
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
 
   useEffect(() => {
-    // Check browser support
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const supported = !!SpeechRecognition && isTTSSupported();
+    // Check browser support - handle both prefixed and unprefixed
+    type SpeechRecognitionConstructor = new () => SpeechRecognitionInstance;
+    const win = window as unknown as Record<string, unknown>;
+    const SpeechRecognitionAPI = win.SpeechRecognition as SpeechRecognitionConstructor | undefined || win.webkitSpeechRecognition as SpeechRecognitionConstructor | undefined;
+    
+    const supported = !!SpeechRecognitionAPI && isTTSSupported();
     setIsSupported(supported);
 
-    if (SpeechRecognition) {
-      const recognitionInstance = new SpeechRecognition();
+    if (SpeechRecognitionAPI) {
+      const recognitionInstance = new SpeechRecognitionAPI();
       recognitionInstance.continuous = false;
       recognitionInstance.interimResults = false;
       recognitionInstance.lang = 'ms-MY'; // Bahasa Melayu
 
-      recognitionInstance.onresult = (event) => {
+      recognitionInstance.onresult = (event: SpeechRecognitionEvent) => {
         const transcript = event.results[0][0].transcript.toLowerCase();
         if (onVoiceCommand) {
           onVoiceCommand(transcript);
@@ -58,16 +85,17 @@ export function VoiceButton({
         }
       };
 
-      recognitionInstance.onerror = (event) => {
+      recognitionInstance.onerror = (event: { error: string }) => {
         console.error('Speech recognition error:', event.error);
         setIsListening(false);
       };
 
-      setRecognition(recognitionInstance);
+      recognitionRef.current = recognitionInstance;
     }
   }, [onVoiceCommand, onListenEnd]);
 
   const toggleListening = useCallback(() => {
+    const recognition = recognitionRef.current;
     if (!recognition) return;
 
     if (isListening) {
@@ -80,19 +108,23 @@ export function VoiceButton({
         onListenStart();
       }
     }
-  }, [recognition, isListening, onListenStart]);
+  }, [isListening, onListenStart]);
 
-  const toggleSpeaking = useCallback(() => {
+  const toggleSpeaking = useCallback(async () => {
     if (!textToRead) return;
 
     if (isSpeaking) {
       stopSpeaking();
       setIsSpeaking(false);
     } else {
-      speak(textToRead, {
-        onEnd: () => setIsSpeaking(false),
-      });
       setIsSpeaking(true);
+      try {
+        await speak(textToRead);
+      } catch (error) {
+        console.error('TTS error:', error);
+      } finally {
+        setIsSpeaking(false);
+      }
     }
   }, [textToRead, isSpeaking]);
 
