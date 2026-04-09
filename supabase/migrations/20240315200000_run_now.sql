@@ -12,7 +12,7 @@
 
 -- MEDICINE REMINDERS TABLE
 CREATE TABLE IF NOT EXISTS medicine_reminders (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   name TEXT NOT NULL,
   dosage TEXT NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS medicine_reminders (
 
 -- MEDICINE LOGS TABLE
 CREATE TABLE IF NOT EXISTS medicine_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   medicine_id UUID NOT NULL,
   taken_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS medicine_logs (
 
 -- MEAL LOGS TABLE
 CREATE TABLE IF NOT EXISTS meal_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   food_id TEXT NOT NULL,
   portion TEXT NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS meal_logs (
 
 -- HEALTH LOGS TABLE
 CREATE TABLE IF NOT EXISTS health_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   log_type health_log_type NOT NULL,
   value DECIMAL(10,2) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS health_logs (
 
 -- CANCER TREATMENT TIPS TABLE
 CREATE TABLE IF NOT EXISTS cancer_treatment_tips (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   cancer_type TEXT NOT NULL,
   treatment_type treatment_type NOT NULL,
   tip_category tip_category_type NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS cancer_treatment_tips (
 
 -- SIDE EFFECT MANAGEMENT TABLE
 CREATE TABLE IF NOT EXISTS side_effect_management (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   side_effect TEXT NOT NULL UNIQUE,
   description TEXT NOT NULL,
   recommended_foods TEXT[] DEFAULT ARRAY[]::TEXT[],
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS side_effect_management (
 
 -- NOTIFICATIONS TABLE
 CREATE TABLE IF NOT EXISTS notifications (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   type notification_type NOT NULL,
   title TEXT NOT NULL,
@@ -103,16 +103,14 @@ CREATE TABLE IF NOT EXISTS notifications (
 
 -- AI CHAT HISTORY TABLE
 CREATE TABLE IF NOT EXISTS ai_chat_history (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('user', 'assistant')),
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Part 3: Indexes
-CREATE INDEX IF NOT EXISTS idx_blood_sugar_logs_user_date ON blood_sugar_logs(user_id, logged_date DESC);
-CREATE INDEX IF NOT EXISTS idx_blood_sugar_logs_user_status ON blood_sugar_logs(user_id, status);
+-- Part 3: Indexes (for new tables only)
 CREATE INDEX IF NOT EXISTS idx_medicine_reminders_user ON medicine_reminders(user_id);
 CREATE INDEX IF NOT EXISTS idx_medicine_logs_user_date ON medicine_logs(user_id, taken_at DESC);
 CREATE INDEX IF NOT EXISTS idx_meal_logs_user_date ON meal_logs(user_id, logged_at DESC);
