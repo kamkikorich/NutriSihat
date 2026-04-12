@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Calendar, Plus, Trash2, ShoppingCart, ChevronLeft, ChevronRight, Info, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -86,11 +86,7 @@ export default function MealPlannerPage() {
   const supabase = createClient();
 
   // Load foods from database
-  useEffect(() => {
-    loadFoods();
-  }, []);
-
-  async function loadFoods() {
+  const loadFoods = useCallback(async () => {
     try {
       const { data: foods, error } = await supabase
         .from('foods')
@@ -143,14 +139,14 @@ export default function MealPlannerPage() {
       console.error('Error loading foods:', error);
       toast.error('Gagal memuatkan makanan. Pastikan migration sudah dijalankan.');
     }
-  }
+  }, [supabase]);
+
+  useEffect(() => {
+    loadFoods();
+  }, [loadFoods]);
 
   // Load existing meal plan
-  useEffect(() => {
-    loadMealPlan();
-  }, [currentWeekStart]);
-
-  async function loadMealPlan() {
+  const loadMealPlan = useCallback(async () => {
     setIsLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -193,7 +189,11 @@ export default function MealPlannerPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [currentWeekStart, supabase]);
+
+  useEffect(() => {
+    loadMealPlan();
+  }, [loadMealPlan]);
 
   async function saveMealPlan() {
     setIsSaving(true);
