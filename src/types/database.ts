@@ -353,12 +353,223 @@ export interface Database {
           created_at?: string
         }
       }
+      // Meal Planner Tables
+      foods: {
+        Row: {
+          id: string
+          name: string
+          name_ms: string | null
+          description: string | null
+          glycemic_index: number | null
+          is_diabetes_safe: boolean
+          is_uterus_friendly: boolean
+          is_sabah_local: boolean
+          category: 'protein' | 'vegetable' | 'carbohydrate' | 'fruit' | 'condiment' | null
+          calories_per_100g: number | null
+          protein_per_100g: number | null
+          fiber_per_100g: number | null
+          health_notes: string | null
+          alternatives: string | null
+          tips: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          name_ms?: string | null
+          description?: string | null
+          glycemic_index?: number | null
+          is_diabetes_safe?: boolean
+          is_uterus_friendly?: boolean
+          is_sabah_local?: boolean
+          category?: 'protein' | 'vegetable' | 'carbohydrate' | 'fruit' | 'condiment' | null
+          calories_per_100g?: number | null
+          protein_per_100g?: number | null
+          fiber_per_100g?: number | null
+          health_notes?: string | null
+          alternatives?: string | null
+          tips?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          name_ms?: string | null
+          description?: string | null
+          glycemic_index?: number | null
+          is_diabetes_safe?: boolean
+          is_uterus_friendly?: boolean
+          is_sabah_local?: boolean
+          category?: 'protein' | 'vegetable' | 'carbohydrate' | 'fruit' | 'condiment' | null
+          calories_per_100g?: number | null
+          protein_per_100g?: number | null
+          fiber_per_100g?: number | null
+          health_notes?: string | null
+          alternatives?: string | null
+          tips?: string | null
+          created_at?: string
+        }
+      }
+      meal_plans: {
+        Row: {
+          id: string
+          user_id: string
+          week_start_date: string
+          week_end_date: string
+          total_budget: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          week_start_date: string
+          week_end_date: string
+          total_budget?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          week_start_date?: string
+          week_end_date?: string
+          total_budget?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      daily_meals: {
+        Row: {
+          id: string
+          meal_plan_id: string
+          day_of_week: number
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          food_id: string | null
+          food_name: string
+          food_name_ms: string | null
+          portion_size: string | null
+          calories: number | null
+          glycemic_index: number | null
+          is_diabetes_safe: boolean
+          is_uterus_friendly: boolean
+          is_sabah_local: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          meal_plan_id: string
+          day_of_week: number
+          meal_type: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          food_id?: string | null
+          food_name: string
+          food_name_ms?: string | null
+          portion_size?: string | null
+          calories?: number | null
+          glycemic_index?: number | null
+          is_diabetes_safe?: boolean
+          is_uterus_friendly?: boolean
+          is_sabah_local?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          meal_plan_id?: string
+          day_of_week?: number
+          meal_type?: 'breakfast' | 'lunch' | 'dinner' | 'snack'
+          food_id?: string | null
+          food_name?: string
+          food_name_ms?: string | null
+          portion_size?: string | null
+          calories?: number | null
+          glycemic_index?: number | null
+          is_diabetes_safe?: boolean
+          is_uterus_friendly?: boolean
+          is_sabah_local?: boolean
+          created_at?: string
+        }
+      }
+      shopping_lists: {
+        Row: {
+          id: string
+          meal_plan_id: string
+          item_name: string
+          item_name_ms: string | null
+          category: string | null
+          quantity: string
+          estimated_price: number | null
+          market_location: string | null
+          is_purchased: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          meal_plan_id: string
+          item_name: string
+          item_name_ms?: string | null
+          category?: string | null
+          quantity: string
+          estimated_price?: number | null
+          market_location?: string | null
+          is_purchased?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          meal_plan_id?: string
+          item_name?: string
+          item_name_ms?: string | null
+          category?: string | null
+          quantity?: string
+          estimated_price?: number | null
+          market_location?: string | null
+          is_purchased?: boolean
+          created_at?: string
+        }
+      }
+      user_food_preferences: {
+        Row: {
+          id: string
+          user_id: string
+          food_id: string
+          preference_level: 'love' | 'like' | 'neutral' | 'dislike' | 'avoid'
+          is_allergy: boolean
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          food_id: string
+          preference_level?: 'love' | 'like' | 'neutral' | 'dislike' | 'avoid'
+          is_allergy?: boolean
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          food_id?: string
+          preference_level?: 'love' | 'like' | 'neutral' | 'dislike' | 'avoid'
+          is_allergy?: boolean
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_shopping_list: {
+        Args: {
+          meal_plan_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
