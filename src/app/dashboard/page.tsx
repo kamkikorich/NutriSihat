@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardInteractive } from '@/components/ui/card'
-import { Heart, Activity, Pill, UtensilsCrossed, Sparkles, ChevronRight } from 'lucide-react'
+import { Heart, Activity, Pill, UtensilsCrossed, Sparkles, ChevronRight, Calendar } from 'lucide-react'
 import { GREETINGS, APP_NAME } from '@/lib/constants'
 import { getGreetingBM } from '@/lib/utils'
 
@@ -103,7 +103,7 @@ export default async function DashboardPage(): Promise<JSX.Element> {
         </section>
 
         {/* Main Action Buttons */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
           <Link href="/makanan" className="block">
             <Button 
               variant="default" 
@@ -113,6 +113,18 @@ export default async function DashboardPage(): Promise<JSX.Element> {
               <UtensilsCrossed size={40} />
               <span className="text-xl font-bold">Panduan Makanan</span>
               <span className="text-base opacity-80">Senarai makanan selamat</span>
+            </Button>
+          </Link>
+          
+          <Link href="/meal-planner" className="block">
+            <Button 
+              variant="accent" 
+              size="xl"
+              className="w-full flex flex-col items-center gap-3 py-6"
+            >
+              <Calendar size={40} />
+              <span className="text-xl font-bold">Perancang Makanan</span>
+              <span className="text-base opacity-80">Jadual mingguan Sabah</span>
             </Button>
           </Link>
           

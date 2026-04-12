@@ -13,8 +13,9 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
-     * - auth routes (login, register, callback)
+     * - auth routes (login, register, callback, reset-password)
+     * - static media files
      */
-    '/((?!_next/static|_next/image|favicon.ico|fonts|images|manifest.json|sw.js|auth/login|auth/register|auth/callback|auth/reset-password).*)',
+    '/((?!_next/static|_next/image|favicon.ico|fonts|images|manifest.json|sw.js|workbox-*.js|auth/.*).*)',
   ],
 }

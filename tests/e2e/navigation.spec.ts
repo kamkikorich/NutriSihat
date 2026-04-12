@@ -5,9 +5,9 @@ import { test, expect, Page } from '@playwright/test';
  * Tests navigation between pages
  */
 
-// Test credentials
-const TEST_EMAIL = 'guniyah@nutrisihat.com';
-const TEST_PASSWORD = 'WajibSihat';
+// Test credentials - loaded from environment variables for security
+const TEST_EMAIL = process.env.TEST_EMAIL || 'test@example.com';
+const TEST_PASSWORD = process.env.TEST_PASSWORD || 'testpassword123';
 
 // Helper function to login
 async function login(page: Page) {

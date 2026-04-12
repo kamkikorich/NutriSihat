@@ -54,3 +54,8 @@ next-env.d.ts
 Thumbs.db
 Desktop.ini
 nul
+
+# Screenshots and temporary files (keep public images)
+screenshot_*.png
+temp_*.png
+/tmp/
