@@ -18,41 +18,43 @@ const config: Config = {
     },
     extend: {
       colors: {
-        // NutriSihat Color Palette - High Contrast for Elderly
+        // NutriSihat Color Palette - Professional KKM/MOH-inspired with High Contrast for Elderly
         primary: {
-          DEFAULT: '#1E3A5F', // Dark Blue - Main color
-          5: '#F0F4F8',
-          10: '#E8F0F8',
-          50: '#D1E2F0',
-          100: '#A3C5E0',
-          200: '#75A8D0',
-          300: '#478BC0',
-          400: '#2E5077',
-          500: '#1E3A5F',
-          600: '#162F4C',
-          700: '#0F2440',
-          800: '#081933',
-          900: '#020E26',
-          light: '#2E5077',
-          dark: '#0F2440',
+          // Professional Green - Inspired by KKM/MOH branding
+          5: '#E8F5E9',   // Light green tint
+          10: '#C8E6C9',
+          50: '#A5D6A7',
+          100: '#81C784',
+          200: '#66BB6A',
+          300: '#4CAF50', // Primary green
+          400: '#43A047',
+          500: '#388E3C', // Deep green - DEFAULT
+          600: '#2E7D32',
+          700: '#1B5E20',
+          800: '#0F4D1A',
+          900: '#053B0F',
+          DEFAULT: '#388E3C',
+          light: '#4CAF50',
+          dark: '#1B5E20',
         },
         accent: {
-          DEFAULT: '#F59E0B', // Amber/Yellow - Accent color
-          5: '#FFFBEB',
-          10: '#FEF3C7',
-          50: '#FDE68A',
-          100: '#FCD34D',
-          200: '#FBBF24',
-          300: '#F59E0B',
-          400: '#D97706',
-          500: '#B45309',
-          600: '#92400E',
-          700: '#78350F',
-          light: '#FBBF24',
-          dark: '#D97706',
+          // Amber - Warm highlights and calls-to-action
+          5: '#FFF8E1',
+          10: '#FFECB3',
+          50: '#FFE082',
+          100: '#FFD54F',
+          200: '#FFCA28',
+          300: '#FFB300', // Primary amber
+          400: '#FFA000',
+          500: '#FF8F00',
+          600: '#F57F17',
+          700: '#E65100',
+          DEFAULT: '#FFB300',
+          light: '#FFD54F',
+          dark: '#FF8F00',
         },
         success: {
-          DEFAULT: '#22C55E', // Green - Safe foods
+          // Green - Safe foods, positive actions
           5: '#F0FFF4',
           10: '#DCFCE7',
           50: '#BBF7D0',
@@ -61,13 +63,12 @@ const config: Config = {
           300: '#22C55E',
           400: '#16A34A',
           500: '#15803D',
-          600: '#166534',
-          700: '#14532D',
+          DEFAULT: '#22C55E',
           light: '#4ADE80',
           dark: '#16A34A',
         },
         warning: {
-          DEFAULT: '#EF4444', // Red - Avoid foods
+          // Red - Avoid foods, critical alerts
           5: '#FEF2F2',
           10: '#FEE2E2',
           50: '#FECACA',
@@ -76,13 +77,12 @@ const config: Config = {
           300: '#EF4444',
           400: '#DC2626',
           500: '#B91C1C',
-          600: '#991B1B',
-          700: '#7F1D1D',
+          DEFAULT: '#EF4444',
           light: '#F87171',
           dark: '#DC2626',
         },
         caution: {
-          DEFAULT: '#FB923C', // Orange - Limit foods
+          // Orange - Limit foods, warnings
           5: '#FFF7ED',
           10: '#FFEDD5',
           50: '#FED7AA',
@@ -91,25 +91,60 @@ const config: Config = {
           300: '#F97316',
           400: '#EA580C',
           500: '#C2410C',
-          600: '#9A3412',
-          700: '#7C2D12',
+          DEFAULT: '#FB923C',
           light: '#FDBA74',
           dark: '#EA580C',
         },
+        info: {
+          // Blue - Informational messages
+          5: '#EFF6FF',
+          10: '#DBEAFE',
+          50: '#BFDBFE',
+          100: '#93C5FD',
+          200: '#60A5FA',
+          300: '#3B82F6',
+          400: '#2563EB',
+          500: '#1D4ED8',
+          DEFAULT: '#3B82F6',
+          light: '#60A5FA',
+          dark: '#2563EB',
+        },
+        // Semantic colors for professional UI
         background: '#F8FAFC',
-        foreground: '#1E3A5F',
+        foreground: '#0F172A',
+        surface: {
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#E5E5E5',
+          300: '#D4D4D4',
+          DEFAULT: '#FFFFFF',
+        },
+        border: {
+          DEFAULT: '#E5E7EB',
+          light: '#F3F4F6',
+          dark: '#D1D5DB',
+        },
+        muted: {
+          DEFAULT: '#F1F5F9',
+          foreground: '#64748B',
+        },
       },
       fontSize: {
-        // Large fonts for elderly users - minimum 16px, default 18px
-        'xs': ['14px', { lineHeight: '1.5' }],
-        'sm': ['16px', { lineHeight: '1.5' }],  // Mobile minimum
-        'base': ['18px', { lineHeight: '1.6' }], // Default for elderly
-        'lg': ['20px', { lineHeight: '1.6' }],
-        'xl': ['24px', { lineHeight: '1.5' }],
-        '2xl': ['28px', { lineHeight: '1.4' }],
-        '3xl': ['32px', { lineHeight: '1.3' }],
-        '4xl': ['40px', { lineHeight: '1.2' }],
-        '5xl': ['48px', { lineHeight: '1.1' }],
+        // Professional typography scale with elderly-friendly minimums
+        'xs': ['0.75rem', { lineHeight: '1.5' }],   // 12px - Secondary info
+        'sm': ['0.875rem', { lineHeight: '1.5' }],  // 14px - Minimum body
+        'base': ['1rem', { lineHeight: '1.6' }],    // 16px - Default body
+        'lg': ['1.125rem', { lineHeight: '1.6' }],  // 18px - Large body
+        'xl': ['1.25rem', { lineHeight: '1.5' }],   // 20px - Headings
+        '2xl': ['1.5rem', { lineHeight: '1.4' }],   // 24px - H2
+        '3xl': ['1.875rem', { lineHeight: '1.3' }], // 28px - H1
+        '4xl': ['2.25rem', { lineHeight: '1.2' }],  // 36px - Hero
+        '5xl': ['3rem', { lineHeight: '1.1' }],     // 48px - Display
+      },
+      fontFamily: {
+        // Professional font stack
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
       },
       spacing: {
         // Touch-friendly button sizes

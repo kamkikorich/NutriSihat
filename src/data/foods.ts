@@ -2,7 +2,7 @@
 // Malaysian local foods categorized for Diabetes and Uterine health
 // Based on research: Diabetes guidelines, Uterine health diet, Malaysian food analysis
 
-import type { FoodItem, FoodCategory } from '@/types/food';
+import type { FoodItem, FoodCategory, KKMClassification, SukuSeparuhCategory } from '@/types/food';
 
 // ==========================================
 // FOOD CATEGORIES
@@ -19,6 +19,11 @@ export const FOOD_CATEGORIES: Record<FoodCategory, { name: string; description: 
   lauk: { name: 'Lauk Pauk', description: 'Lauk tradisional' },
   snack: { name: 'Snack', description: 'Makanan ringan' },
   sup: { name: 'Sup', description: 'Sup dan soto' },
+  // KKM Database Categories (Suku-Separuh)
+  carbohydrate: { name: 'Karbohidrat', description: 'Nasi, roti, oat, ubi (Suku - 25% pinggan)' },
+  vegetable: { name: 'Sayur-sayuran', description: 'Sayur hijau, sayur berdaun (Separuh - 50% pinggan)' },
+  fruit: { name: 'Buah-buahan', description: 'Buah segar (1 sajian)' },
+  condiment: { name: 'Perasa & Lain-lain', description: 'Rempah, perasa, minyak sihat' },
 };
 
 // ==========================================
@@ -48,6 +53,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Rebus atau kukus untuk mengekalkan nutrien', 'Jangan overcook'],
     image_url: '/images/foods/broccoli.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 cawan (150g)',
+      calories_per_serving: 50,
+      rni_percentage: {
+        vitamin_a: 60,
+        vitamin_c: 135,
+        calcium: 5,
+        iron: 4,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-kobis',
@@ -66,6 +83,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Boleh dimakan mentah dalam salad', 'Rebus untuk sup'],
     image_url: '/images/foods/cabbage.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 cawan (150g)',
+      calories_per_serving: 35,
+      rni_percentage: {
+        vitamin_c: 60,
+        vitamin_a: 2,
+        calcium: 4,
+        iron: 3,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-bayam',
@@ -84,6 +113,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Kukus atau goreng dengan sedikit minyak', 'Tambah dalam sup'],
     image_url: '/images/foods/spinach.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 cawan (180g)',
+      calories_per_serving: 41,
+      rni_percentage: {
+        vitamin_a: 188,
+        vitamin_c: 30,
+        iron: 15,
+        calcium: 10,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-kangkung',
@@ -102,6 +143,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Goreng belacan popular tapi kurangkan belacan manis', 'Rebus untuk sup'],
     image_url: '/images/foods/kangkung.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 cawan (100g)',
+      calories_per_serving: 35,
+      rni_percentage: {
+        vitamin_a: 110,
+        vitamin_c: 55,
+        iron: 10,
+        calcium: 8,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-sawi',
@@ -120,6 +173,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Goreng dengan ikan bilis', 'Tambah dalam sup'],
     image_url: '/images/foods/sawi.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 cawan (150g)',
+      calories_per_serving: 40,
+      rni_percentage: {
+        vitamin_a: 100,
+        vitamin_c: 70,
+        calcium: 12,
+        iron: 6,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-tomato',
@@ -138,6 +203,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan mentah dalam salad', 'Tambah dalam sup atau kari'],
     image_url: '/images/foods/tomato.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 biji sederhana (120g)',
+      calories_per_serving: 22,
+      rni_percentage: {
+        vitamin_c: 28,
+        vitamin_a: 20,
+        potassium: 8,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   {
     id: 'sayur-carrot',
@@ -156,6 +232,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Rebus atau kukus', 'Tambah dalam sup'],
     image_url: '/images/foods/carrot.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'sayur',
+      serving_size: '1 biji sederhana (100g)',
+      calories_per_serving: 41,
+      rni_percentage: {
+        vitamin_a: 334,
+        vitamin_c: 10,
+        potassium: 7,
+      },
+    },
+    suku_separuh_category: 'separuh_sayur',
   },
   
   // Buah-buahan (Safe for both)
@@ -176,6 +263,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan kulit untuk lebih fiber', 'Pilih apple hijau untuk kurang gula'],
     image_url: '/images/foods/apple.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 biji sederhana (180g)',
+      calories_per_serving: 95,
+      rni_percentage: {
+        vitamin_c: 14,
+        potassium: 6,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'buah-guava',
@@ -194,6 +291,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan tanpa kulit atau dengan kulit', 'Pilih jambu yang tidak terlalu masak'],
     image_url: '/images/foods/guava.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 biji sederhana (150g)',
+      calories_per_serving: 102,
+      rni_percentage: {
+        vitamin_c: 375,
+        vitamin_a: 10,
+        potassium: 8,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'buah-papaya',
@@ -212,6 +320,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan dalam jumlah sederhana untuk diabetes', 'Pilih betik yang tidak terlalu manis'],
     image_url: '/images/foods/papaya.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 cawan (145g)',
+      calories_per_serving: 62,
+      rni_percentage: {
+        vitamin_a: 31,
+        vitamin_c: 144,
+        potassium: 5,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'buah-starfruit',
@@ -230,6 +349,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan mentah', 'Boleh dibuat jus tanpa gula'],
     image_url: '/images/foods/starfruit.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 biji sederhana (90g)',
+      calories_per_serving: 28,
+      rni_percentage: {
+        vitamin_c: 52,
+        potassium: 4,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'buah-citrus',
@@ -248,6 +377,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan buah segar, bukan jus', 'Tambah limau dalam air untuk minum'],
     image_url: '/images/foods/orange.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 biji sederhana (130g)',
+      calories_per_serving: 62,
+      rni_percentage: {
+        vitamin_c: 117,
+        potassium: 5,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'buah-berry',
@@ -266,6 +405,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan segar', 'Tambah dalam yogurt tanpa gula'],
     image_url: '/images/foods/blueberry.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1/2 cawan (75g)',
+      calories_per_serving: 42,
+      rni_percentage: {
+        vitamin_c: 97,
+        vitamin_a: 1,
+        potassium: 3,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   
   // Protein (Safe for both)
@@ -285,6 +435,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Goreng dengan sedikit minyak', 'Rebus atau bakar', 'Pilih ikan segar'],
     image_url: '/images/foods/fish.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1 tapak tangan (80g)',
+      calories_per_serving: 100,
+      rni_percentage: {
+        vitamin_d: 57,
+        iron: 5,
+        zinc: 8,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'protein-ayam',
@@ -302,6 +463,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Buang kulit untuk kurangkan lemak', 'Rebus atau goreng dengan sedikit minyak'],
     image_url: '/images/foods/chicken.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1 tapak tangan (80g)',
+      calories_per_serving: 120,
+      rni_percentage: {
+        iron: 6,
+        zinc: 10,
+        vitamin_b12: 10,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'protein-egg',
@@ -319,6 +491,18 @@ export const FOODS: FoodItem[] = [
     tips: ['Rebus untuk kurangkan lemak', 'Maksimum 2 telur sehari'],
     image_url: '/images/foods/egg.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1 biji besar (50g)',
+      calories_per_serving: 78,
+      rni_percentage: {
+        vitamin_d: 21,
+        iron: 9,
+        zinc: 6,
+        vitamin_b12: 19,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'protein-tofu',
@@ -336,6 +520,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Goreng dengan sedikit minyak', 'Tambah dalam sup', 'PENTING: Tanya doctor tentang estrogen'],
     image_url: '/images/foods/tofu.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1/4 blok (120g)',
+      calories_per_serving: 94,
+      rni_percentage: {
+        calcium: 20,
+        iron: 15,
+        zinc: 8,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'protein-tempeh',
@@ -353,6 +548,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Goreng atau rebus', 'Tambah dalam salad atau sup'],
     image_url: '/images/foods/tempeh.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1/4 blok (85g)',
+      calories_per_serving: 140,
+      rni_percentage: {
+        calcium: 12,
+        iron: 15,
+        zinc: 10,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   
   // Whole Grains (Safe)
@@ -373,6 +579,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Masak dengan air, bukan susu manis', 'Tambah buah segar', 'Elakkan oat instant dengan gula'],
     image_url: '/images/foods/oatmeal.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1/2 cawan (120g)',
+      calories_per_serving: 83,
+      rni_percentage: {
+        iron: 8,
+        magnesium: 15,
+        zinc: 10,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'grain-whole-wheat',
@@ -391,6 +608,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Pilih roti whole wheat tulen', 'Makan dengan protein (telur, ayam)'],
     image_url: '/images/foods/whole-wheat-bread.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 keping (30g)',
+      calories_per_serving: 81,
+      rni_percentage: {
+        iron: 5,
+        magnesium: 8,
+        zinc: 4,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   
   // Kacang (Safe)
@@ -411,6 +639,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan dalam jumlah sederhana', 'Pilih kacang tanpa garam tambahan'],
     image_url: '/images/foods/peanuts.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1/4 cawan (30g)',
+      calories_per_serving: 170,
+      rni_percentage: {
+        iron: 8,
+        magnesium: 20,
+        zinc: 10,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'nut-almond',
@@ -429,6 +668,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan sedikit (10-15 biji)', 'Pilih almond tanpa garam'],
     image_url: '/images/foods/almonds.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '1/4 cawan (30g)',
+      calories_per_serving: 170,
+      rni_percentage: {
+        vitamin_e: 185,
+        magnesium: 25,
+        calcium: 8,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   
   // ==========================================
@@ -452,6 +702,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Ganti dengan nasi brown', 'Kurangkan portion', 'Makan lebih sayur dengan nasi'],
     image_url: '/images/foods/white-rice.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 cawan (150g)',
+      calories_per_serving: 205,
+      rni_percentage: {
+        iron: 1,
+        magnesium: 3,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'nasi-lemak',
@@ -470,6 +730,16 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK atau KURANG', 'Pilih nasi brown version jika ada', 'Kurangkan sambal'],
     image_url: '/images/foods/nasi-lemak.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 plat (300g)',
+      calories_per_serving: 550,
+      rni_percentage: {
+        iron: 15,
+        calcium: 4,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'teh-tarik',
@@ -487,6 +757,15 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK teh tarik biasa', 'Pilih Teh O kurang manis atau tanpa gula', 'Ganti dengan teh herba'],
     image_url: '/images/foods/teh-tarik.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'lemak',
+      serving_size: '1 cawan (200ml)',
+      calories_per_serving: 120,
+      rni_percentage: {
+        calcium: 8,
+      },
+    },
+    suku_separuh_category: 'lemak',
   },
   {
     id: 'roti-canai',
@@ -505,6 +784,15 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK', 'Pilih roti whole wheat jika nak roti', 'Makan dengan lauk sihat'],
     image_url: '/images/foods/roti-canai.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 keping (80g)',
+      calories_per_serving: 250,
+      rni_percentage: {
+        iron: 6,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'kuih-muih',
@@ -522,6 +810,15 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK', 'Ganti dengan buah segar', 'Pilih kuih kurang manis jika terpaksa'],
     image_url: '/images/foods/kuih.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 piece (50g)',
+      calories_per_serving: 150,
+      rni_percentage: {
+        iron: 2,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'minuman-manis',
@@ -539,6 +836,13 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK semua minuman manis', 'Minum air kosong', 'Pilih teh herba'],
     image_url: '/images/foods/sweet-drinks.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 gelas (330ml)',
+      calories_per_serving: 140,
+      rni_percentage: {},
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'makanan-process',
@@ -556,6 +860,15 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK processed food', 'Pilih makanan segar', 'Masak di rumah'],
     image_url: '/images/foods/processed-food.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'protein',
+      serving_size: '100g',
+      calories_per_serving: 250,
+      rni_percentage: {
+        iron: 5,
+      },
+    },
+    suku_separuh_category: 'suku_protein',
   },
   {
     id: 'fried-food',
@@ -573,6 +886,13 @@ export const FOODS: FoodItem[] = [
     tips: ['ELAK deep fried', 'Pilih kukus atau bakar', 'Goreng dengan sedikit minyak jika terpaksa'],
     image_url: '/images/foods/fried-food.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'lemak',
+      serving_size: '1 piece (50g)',
+      calories_per_serving: 200,
+      rni_percentage: {},
+    },
+    suku_separuh_category: 'lemak',
   },
   
   // ==========================================
@@ -596,6 +916,16 @@ export const FOODS: FoodItem[] = [
     tips: ['BOLEH makan dalam portion sederhana', 'Makan lebih sayur dengan nasi', 'Jangan makan terlalu banyak'],
     image_url: '/images/foods/brown-rice.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1/2 cawan (100g)',
+      calories_per_serving: 112,
+      rni_percentage: {
+        iron: 2,
+        magnesium: 7,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'mango',
@@ -614,6 +944,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan sedikit sahaja', 'Pilih mango yang tidak terlalu manis', 'Jangan makan setiap hari'],
     image_url: '/images/foods/mango.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1/2 cawan (100g)',
+      calories_per_serving: 60,
+      rni_percentage: {
+        vitamin_a: 25,
+        vitamin_c: 60,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'banana',
@@ -632,6 +972,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Makan sedikit sahaja', 'Pilih pisang yang tidak terlalu masak', 'Pisang beriani lebih baik'],
     image_url: '/images/foods/banana.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'buah',
+      serving_size: '1 biji sederhana (120g)',
+      calories_per_serving: 105,
+      rni_percentage: {
+        vitamin_c: 17,
+        potassium: 12,
+      },
+    },
+    suku_separuh_category: 'separuh_buah',
   },
   {
     id: 'sweet-potato',
@@ -650,6 +1000,17 @@ export const FOODS: FoodItem[] = [
     tips: ['Rebus atau kukus', 'Makan dalam portion sederhana', 'Jangan goreng'],
     image_url: '/images/foods/sweet-potato.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'karbohidrat',
+      serving_size: '1 biji sederhana (130g)',
+      calories_per_serving: 112,
+      rni_percentage: {
+        vitamin_a: 184,
+        vitamin_c: 37,
+        potassium: 8,
+      },
+    },
+    suku_separuh_category: 'suku_karbo',
   },
   {
     id: 'yogurt-sweet',
@@ -667,6 +1028,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Pilih yogurt plain atau Greek', 'Tambah buah segar sendiri', 'Elak yogurt dengan gula tambahan'],
     image_url: '/images/foods/yogurt.png',
     is_local_malaysian: false,
+    kkm_classification: {
+      category: 'susu',
+      serving_size: '1 cawan (200g)',
+      calories_per_serving: 120,
+      rni_percentage: {
+        calcium: 30,
+        vitamin_b12: 20,
+      },
+    },
+    suku_separuh_category: 'susu',
   },
   {
     id: 'coffee',
@@ -684,6 +1055,13 @@ export const FOODS: FoodItem[] = [
     tips: ['Minum kopi tanpa gula atau dengan stevia', 'Elak kopi susu manis', 'Kurangkan jika ada anxiety'],
     image_url: '/images/foods/coffee.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'lemak',
+      serving_size: '1 cawan (240ml)',
+      calories_per_serving: 50,
+      rni_percentage: {},
+    },
+    suku_separuh_category: 'lemak',
   },
   {
     id: 'curry',
@@ -701,6 +1079,16 @@ export const FOODS: FoodItem[] = [
     tips: ['Kurangkan santan', 'Pilih kari dengan lebih sayur', 'Masak dengan kurang minyak'],
     image_url: '/images/foods/curry.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'lemak',
+      serving_size: '1/2 cawan (120ml)',
+      calories_per_serving: 150,
+      rni_percentage: {
+        iron: 10,
+        vitamin_a: 15,
+      },
+    },
+    suku_separuh_category: 'lemak',
   },
   {
     id: 'sambal',
@@ -718,6 +1106,15 @@ export const FOODS: FoodItem[] = [
     tips: ['Kurangkan sambal manis', 'Pilih sambal tanpa gula', 'Makan sedikit sahaja'],
     image_url: '/images/foods/sambal.png',
     is_local_malaysian: true,
+    kkm_classification: {
+      category: 'lemak',
+      serving_size: '2 sudu makan (30g)',
+      calories_per_serving: 80,
+      rni_percentage: {
+        vitamin_c: 10,
+      },
+    },
+    suku_separuh_category: 'lemak',
   },
 ];
 

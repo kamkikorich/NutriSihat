@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-plus-jakarta-sans',
 });
 
 // Metadata for PWA - Bahasa Malaysia
@@ -38,7 +44,7 @@ export const metadata: Metadata = {
 
 // Mobile-first viewport settings
 export const viewport: Viewport = {
-  themeColor: '#1E3A5F',
+  themeColor: '#388E3C', // KKM green primary
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5, // Allow zoom for accessibility
@@ -61,7 +67,7 @@ export default function RootLayout({
         {/* Safe area support for notched devices */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className={`${inter.className} antialiased bg-background text-foreground min-h-screen`}>
+      <body className={`${inter.variable} ${plusJakartaSans.variable} ${inter.className} antialiased bg-background text-foreground min-h-screen`}>
         <main className="min-h-screen">
           {children}
         </main>

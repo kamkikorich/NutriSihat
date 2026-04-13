@@ -136,13 +136,13 @@ export const FOOD_TIPS = {
 } as const;
 
 // ==========================================
-// BLOOD SUGAR LEVELS
+// BLOOD SUGAR LEVELS (KKM Guidelines)
 // ==========================================
 
 export const BLOOD_SUGAR = {
   title: 'Log Gula Darah',
   description: 'Rekod gula darah Mak setiap hari',
-  
+
   labels: {
     before_meal: 'Sebelum Makan',
     after_meal: 'Selepas Makan',
@@ -151,34 +151,34 @@ export const BLOOD_SUGAR = {
     time: 'Masa',
     notes: 'Nota',
   },
-  
+
   status: {
     rendah: {
       label: 'Rendah',
-      range: '< 3.0 mmol/L',
+      range: '< 3.9 mmol/L',
       message: 'Gula darah terlalu rendah!',
       advice: 'Sila makan sesuatu dengan segera',
     },
     normal: {
       label: 'Normal',
-      range: '3.0 - 5.6 mmol/L',
+      range: '3.9 - 5.5 mmol/L',
       message: 'Gula darah normal!',
       advice: 'Teruskan pemakanan yang sihat',
     },
     tinggi: {
       label: 'Tinggi',
-      range: '5.6 - 7.0 mmol/L',
+      range: '5.6 - 6.9 mmol/L',
       message: 'Gula darah tinggi',
       advice: 'Kurangkan makanan manis',
     },
     sangat_tinggi: {
       label: 'Sangat Tinggi',
-      range: '> 7.0 mmol/L',
+      range: '>= 7.0 mmol/L',
       message: 'Gula darah sangat tinggi!',
       advice: 'Sila berjumpa doktor',
     },
   },
-  
+
   buttons: {
     add: 'Tambah Rekod',
     save: 'Simpan',
@@ -186,6 +186,14 @@ export const BLOOD_SUGAR = {
     edit: 'Ubah',
     delete: 'Padam',
   },
+} as const;
+
+// KKM Blood Sugar Thresholds (based on Malaysian Clinical Practice Guidelines)
+export const BLOOD_SUGAR_KKM_THRESHOLDS = {
+  hypoglycemia: { value: 3.9, unit: 'mmol/L', label: 'Hipoglisemia' },
+  normal_fasting: { min: 3.9, max: 5.5, unit: 'mmol/L', label: 'Normal (Puasa)' },
+  prediabetes: { min: 5.6, max: 6.9, unit: 'mmol/L', label: 'Pra-Diabetes' },
+  diabetes: { min: 7.0, unit: 'mmol/L', label: 'Diabetes' },
 } as const;
 
 // ==========================================

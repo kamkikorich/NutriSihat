@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { Calendar, Plus, Trash2, ShoppingCart, ChevronLeft, ChevronRight, Info, Loader2 } from 'lucide-react';
+import { ShoppingCart, ChevronLeft, ChevronRight, UtensilsCrossed, Heart, Calendar, Sparkles, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -22,6 +23,11 @@ import {
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { Header } from '@/components/ui/professional/Header';
+import { PageContainer } from '@/components/ui/professional/PageContainer';
+import { Section } from '@/components/ui/professional/Section';
+import { InfoBanner } from '@/components/ui/professional/InfoBanner';
+import { Grid } from '@/components/ui/professional/Grid';
 
 interface FoodItem {
   id: string;
@@ -349,220 +355,253 @@ export default function MealPlannerPage() {
   weekEnd.setDate(weekEnd.getDate() + 6);
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-teal-700 mb-2">
-          🗓️ Perancang Makanan Mingguan
-        </h1>
-        <p className="text-gray-600">
-          Rancang makanan sihat untuk Mak dengan makanan tradisional Sabah
-        </p>
-      </div>
-
-      {/* Week Navigation */}
-      <Card className="mb-6">
-        <CardContent className="p-4 flex items-center justify-between">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              const newDate = new Date(currentWeekStart);
-              newDate.setDate(newDate.getDate() - 7);
-              setCurrentWeekStart(newDate);
-            }}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          
-          <div className="text-center">
-            <p className="font-semibold">
-              {currentWeekStart.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
-            <p className="text-sm text-gray-500">
-              hingga {weekEnd.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
+    <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
+      {/* Professional Header */}
+      <Header
+        title="Perancang Makanan"
+        subtitle="Jadual makanan mingguan untuk Mak"
+        showBack={true}
+        backHref="/"
+        actions={
+          <div className="flex items-center gap-2 text-sm opacity-90">
+            <UtensilsCrossed className="h-5 w-5" />
           </div>
+        }
+      />
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              const newDate = new Date(currentWeekStart);
-              newDate.setDate(newDate.getDate() + 7);
-              setCurrentWeekStart(newDate);
-            }}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </CardContent>
-      </Card>
+      <PageContainer padding="md" maxWidth="wide">
+        <div className="space-y-6 py-6">
 
-      {/* Action Buttons */}
-      <div className="flex gap-2 mb-6">
-        <Button 
-          onClick={saveMealPlan} 
-          disabled={isSaving || Object.keys(mealPlan).length === 0}
-          className="flex-1"
-        >
-          💾 {isSaving ? 'Menyimpan...' : 'Simpan Pelan'}
-        </Button>
-        
-        <Dialog open={showShoppingList} onOpenChange={setShowShoppingList}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
-              <ShoppingCart className="h-4 w-4" />
-              Senarai Belanja
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>🛒 Senarai Belanja Mingguan</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-2 mt-4">
-              {shoppingList.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">
-                  Tiada item. Simpan pelan makanan dahulu.
+          {/* Week Navigation Card */}
+          <Section background="surface" border="all">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  const newDate = new Date(currentWeekStart);
+                  newDate.setDate(newDate.getDate() - 7);
+                  setCurrentWeekStart(newDate);
+                }}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+
+              <div className="text-center">
+                <p className="font-semibold text-base">
+                  {currentWeekStart.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
-              ) : (
-                shoppingList.map((item, idx) => (
-                  <Card key={idx}>
-                    <CardContent className="p-3 flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{item.name}</p>
-                        {item.nameMs && (
-                          <p className="text-sm text-gray-500">{item.nameMs}</p>
-                        )}
-                        <Badge variant="outline" className="mt-1">
-                          {item.category}
-                        </Badge>
-                      </div>
-                      <p className="text-lg font-semibold">{item.quantity}</p>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+                <p className="text-sm text-muted-foreground">
+                  hingga {weekEnd.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => {
+                  const newDate = new Date(currentWeekStart);
+                  newDate.setDate(newDate.getDate() + 7);
+                  setCurrentWeekStart(newDate);
+                }}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          </Section>
+
+          {/* Action Buttons */}
+          <Section>
+            <Grid columns={2} gap="md">
+              <Button
+                onClick={saveMealPlan}
+                disabled={isSaving || Object.keys(mealPlan).length === 0}
+                size="lg"
+                className="w-full"
+              >
+                💾 {isSaving ? 'Menyimpan...' : 'Simpan Pelan'}
+              </Button>
+
+              <Dialog open={showShoppingList} onOpenChange={setShowShoppingList}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="lg" className="w-full flex items-center justify-center gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    Senarai Belanja
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>🛒 Senarai Belanja Mingguan</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-2 mt-4">
+                    {shoppingList.length === 0 ? (
+                      <p className="text-muted-foreground text-center py-8">
+                        Tiada item. Simpan pelan makanan dahulu.
+                      </p>
+                    ) : (
+                      shoppingList.map((item, idx) => (
+                        <Card key={idx}>
+                          <CardContent className="p-3 flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">{item.name}</p>
+                              {item.nameMs && (
+                                <p className="text-sm text-muted-foreground">{item.nameMs}</p>
+                              )}
+                              <Badge variant="outline" className="mt-1">
+                                {item.category}
+                              </Badge>
+                            </div>
+                            <p className="text-lg font-semibold">{item.quantity}</p>
+                          </CardContent>
+                        </Card>
+                      ))
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </Grid>
+          </Section>
 
       {/* Weekly Calendar */}
       {isLoading ? (
         <div className="text-center py-12">
-          <p className="text-gray-500">Memuatkan pelan makanan...</p>
+          <p className="text-muted-foreground">Memuatkan pelan makanan...</p>
         </div>
       ) : (
-        <Tabs defaultValue="0" className="w-full">
-          <TabsList className="grid grid-cols-7 mb-4">
-            {DAYS_OF_WEEK.map(day => (
-              <TabsTrigger key={day.value} value={day.value.toString()}>
-                {day.label.slice(0, 3)}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        <Section background="surface" border="all">
+          <div className="mb-6">
+            <h2 className="font-semibold text-base">Jadual Mingguan</h2>
+            <p className="text-sm text-muted-foreground">Pilih makanan untuk setiap waktu makan</p>
+          </div>
 
-          {DAYS_OF_WEEK.map(day => (
-            <TabsContent key={day.value} value={day.value.toString()}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>{day.label}</CardTitle>
-                  <CardDescription>Jadual makanan harian</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
+          <Tabs defaultValue="0" className="w-full">
+            <TabsList className="grid grid-cols-7 mb-6">
+              {DAYS_OF_WEEK.map(day => (
+                <TabsTrigger key={day.value} value={day.value.toString()}>
+                  {day.label.slice(0, 3)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {DAYS_OF_WEEK.map(day => (
+              <TabsContent key={day.value} value={day.value.toString()}>
+                <div className="space-y-4">
                   {Object.entries(MEAL_TYPES).map(([mealType, mealLabel]) => {
                     const key = `${day.value}-${mealType}`;
                     const selectedMeal = mealPlan[key];
 
                     return (
-                      <Card key={mealType}>
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-lg">{mealLabel}</h3>
-                            {selectedMeal && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleClearMeal(day.value, mealType)}
-                              >
-                                <Trash2 className="h-4 w-4 text-red-500" />
-                              </Button>
-                            )}
-                          </div>
-
-                          {selectedMeal ? (
-                            <div className="space-y-2">
-                              <p className="text-lg font-medium text-teal-700">
-                                {selectedMeal.foodName}
-                              </p>
-                              {selectedMeal.foodNameMs && (
-                                <p className="text-sm text-gray-600">
-                                  {selectedMeal.foodNameMs}
-                                </p>
-                              )}
-                              <div className="flex gap-2 flex-wrap">
-                                {selectedMeal.glycemicIndex !== undefined && (
-                                  <Badge 
-                                    variant={
-                                      selectedMeal.glycemicIndex < 55 ? 'default' :
-                                      selectedMeal.glycemicIndex < 70 ? 'outline' : 'outline'
-                                    }
-                                  >
-                                    GI: {selectedMeal.glycemicIndex} ({getFoodStatus(selectedMeal.glycemicIndex)?.label})
-                                  </Badge>
-                                )}
-                                {selectedMeal.isSabahLocal && (
-                                  <Badge variant="outline">🇲🇾 Sabah</Badge>
-                                )}
-                              </div>
-                            </div>
-                          ) : (
-                            <Select
-                              onValueChange={(foodId) => {
-                                const food = availableFoods[mealType as keyof typeof availableFoods].find(
-                                  f => f.id === foodId
-                                );
-                                if (food) handleMealSelect(day.value, mealType, food);
-                              }}
+                      <div key={mealType} className="border rounded-lg p-4 bg-background">
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-semibold text-base">{mealLabel}</h3>
+                          {selectedMeal && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleClearMeal(day.value, mealType)}
+                              className="h-8 w-8 p-0"
                             >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Pilih makanan" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {availableFoods[mealType as keyof typeof availableFoods]?.map(food => (
-                                  <SelectItem key={food.id} value={food.id}>
-                                    {food.name} {food.is_sabah_local && '🇲🇾'}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
                           )}
-                        </CardContent>
-                      </Card>
+                        </div>
+
+                        {selectedMeal ? (
+                          <div className="space-y-2">
+                            <p className="font-medium text-base text-primary-700">
+                              {selectedMeal.foodName}
+                            </p>
+                            {selectedMeal.foodNameMs && (
+                              <p className="text-sm text-muted-foreground">
+                                {selectedMeal.foodNameMs}
+                              </p>
+                            )}
+                            <div className="flex gap-2 flex-wrap">
+                              {selectedMeal.glycemicIndex !== undefined && (
+                                <Badge
+                                  variant={
+                                    selectedMeal.glycemicIndex < 55 ? 'default' :
+                                    selectedMeal.glycemicIndex < 70 ? 'outline' : 'outline'
+                                  }
+                                  className="text-xs"
+                                >
+                                  GI: {selectedMeal.glycemicIndex} ({getFoodStatus(selectedMeal.glycemicIndex)?.label})
+                                </Badge>
+                              )}
+                              {selectedMeal.isSabahLocal && (
+                                <Badge variant="secondary" className="text-xs">🇲🇾 Sabah</Badge>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <Select
+                            onValueChange={(foodId) => {
+                              const food = availableFoods[mealType as keyof typeof availableFoods].find(
+                                f => f.id === foodId
+                              );
+                              if (food) handleMealSelect(day.value, mealType, food);
+                            }}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Pilih makanan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availableFoods[mealType as keyof typeof availableFoods]?.map(food => (
+                                <SelectItem key={food.id} value={food.id}>
+                                  {food.name} {food.is_sabah_local && '🇲🇾'}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
                     );
                   })}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          ))}
-        </Tabs>
+                </div>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </Section>
       )}
 
-      {/* Info Card */}
-      <Card className="mt-6 bg-teal-50">
-        <CardContent className="p-4 flex items-start gap-3">
-          <Info className="h-5 w-5 text-teal-600 mt-0.5" />
-          <div>
-            <h3 className="font-semibold text-teal-800">💡 Tips Perancangan Makanan</h3>
-            <ul className="text-sm text-teal-700 space-y-1 mt-2">
-              <li>• Pilih makanan GI rendah (&lt;55) untuk kencing manis</li>
-              <li>• Makanan Sabah seperti Hinava, Pinasakan, Midin sangat disyorkan</li>
-              <li>• Elak makanan tinggi GI seperti beras pulut dan tapai</li>
-              <li>• Lebihkan ulam dan sayur tempatan</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+      {/* Info Banner */}
+      <InfoBanner
+        variant="info"
+        title="💡 Tips Perancangan Makanan"
+      >
+        <ul className="text-sm space-y-1">
+          <li>• Pilih makanan GI rendah (&lt;55) untuk kencing manis</li>
+          <li>• Makanan Sabah seperti Hinava, Pinasakan, Midin sangat disyorkan</li>
+          <li>• Elak makanan tinggi GI seperti beras pulut dan tapai</li>
+          <li>• Lebihkan ulam dan sayur tempatan</li>
+        </ul>
+      </InfoBanner>
+
+      {/* Bottom Navigation - Mobile-first fixed */}
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
+      <div className="w-full px-2">
+        <div className="grid grid-cols-4 gap-1 py-2">
+          <Link href="/" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 transition-colors min-h-[56px]">
+            <Heart size={24} />
+            <span className="text-xs sm:text-sm font-semibold">Utama</span>
+          </Link>
+          <Link href="/makanan" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 transition-colors min-h-[56px]">
+            <UtensilsCrossed size={24} />
+            <span className="text-xs sm:text-sm font-semibold">Makanan</span>
+          </Link>
+          <Link href="/meal-planner" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl bg-primary text-white min-h-[56px]">
+            <Calendar size={24} />
+            <span className="text-xs sm:text-sm font-semibold">Jadual</span>
+          </Link>
+          <Link href="/ai" className="flex flex-col items-center justify-center gap-1 py-2 rounded-xl text-primary hover:bg-primary/10 transition-colors min-h-[56px]">
+            <Sparkles size={24} />
+            <span className="text-xs sm:text-sm font-semibold">AI</span>
+          </Link>
+        </div>
+      </div>
+    </nav>
+      </div>
+    </PageContainer>
+  </div>
   );
 }
