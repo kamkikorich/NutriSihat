@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardInteractive } from '@/components/ui/card';
+import { BloodSugarChart } from '@/components/ui/BloodSugarChart';
 import {
   Home,
   UtensilsCrossed,
@@ -21,6 +22,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Loader2,
+  BarChart2,
 } from 'lucide-react';
 import { BLOOD_SUGAR, EMPTY_STATES } from '@/lib/constants';
 
@@ -279,6 +281,19 @@ export default function GulaDarahPage(): JSX.Element {
                   </Button>
                 </div>
               </div>
+            </Card>
+          </section>
+        )}
+
+        {/* Carta Trend */}
+        {!loading && readings.length > 0 && (
+          <section>
+            <Card className="p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart2 size={22} className="text-primary flex-shrink-0" />
+                <h2 className="text-lg sm:text-xl font-bold text-primary">Trend 7 Hari Terakhir</h2>
+              </div>
+              <BloodSugarChart readings={readings} />
             </Card>
           </section>
         )}

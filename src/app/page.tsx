@@ -1,18 +1,17 @@
-// NutriSihat - Main Dashboard Page
-// Professional redesign with KKM theme - Bahasa Malaysia
-
-'use client'
+// NutriSihat - Main Dashboard Page (Server Component)
+// Paparan data sebenar dari Supabase: gula darah & ubat hari ini
 
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/ui/professional/Header'
 import { PageContainer } from '@/components/ui/professional/PageContainer'
 import { Section } from '@/components/ui/professional/Section'
-import { StatCard } from '@/components/ui/professional/StatCard'
 import { InfoBanner } from '@/components/ui/professional/InfoBanner'
 import { EmptyState } from '@/components/ui/professional/EmptyState'
 import { Grid } from '@/components/ui/professional/Grid'
 import { Card, CardContent } from '@/components/ui/card'
+import { DashboardGreeting } from '@/components/dashboard/DashboardGreeting'
 import {
   UtensilsCrossed,
   Pill,
@@ -24,16 +23,68 @@ import {
   Leaf,
   Droplet,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  UserCircle,
+  TrendingUp,
+  Check,
 } from 'lucide-react'
 import { GREETINGS, DASHBOARD, HEALTH_CONDITIONS, APP_NAME } from '@/lib/constants'
-import { getGreetingBM, getCurrentMealBM } from '@/lib/utils'
 import { FOOD_STATS, getFoodsByStatus } from '@/data/foods'
 
-export default function HomePage(): JSX.Element {
-  const greeting = getGreetingBM()
-  const currentMeal = getCurrentMealBM()
+// Tentukan status warna gula darah
+function getBloodSugarBadge(value: number) {
+  if (value < 3.9) return { label: 'Rendah', bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-300' }
+  if (value < 5.6) return { label: '✅ Normal', bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-300' }
+  if (value < 7.0) return { label: '⚠️ Tinggi', bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' }
+  return { label: '❌ Sangat Tinggi', bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300' }
+}
+
+export default async function HomePage() {
+  const supabase = await createClient()
   const safeFoods = getFoodsByStatus('safe').slice(0, 3)
+
+  // Dapatkan user & profil
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let profile: { custom_name?: string; preferred_name?: string } | null = null
+  let latestBloodSugar: { value: number; status: string; logged_time: string; meal_type: string } | null = null
+  let todayMedicineStats = { total: 0, taken: 0 }
+  const today = new Date().toISOString().split('T')[0]
+
+  if (user) {
+    // Ambil profil
+    const { data: profileData } = await supabase
+      .from('profiles')
+      .select('custom_name, preferred_name')
+      .eq('user_id', user.id)
+      .single()
+    profile = profileData
+
+    // Ambil bacaan gula darah terkini (hari ini atau semalam)
+    const { data: bsData } = await supabase
+      .from('blood_sugar_logs')
+      .select('value, status, logged_time, meal_type, logged_date')
+      .eq('user_id', user.id)
+      .order('logged_date', { ascending: false })
+      .order('logged_time', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    latestBloodSugar = bsData
+
+    // Ambil ubat hari ini
+    const { data: medicines } = await supabase
+      .from('medicine_reminders')
+      .select('id, is_active, taken_today')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+    if (medicines) {
+      todayMedicineStats.total = medicines.length
+      todayMedicineStats.taken = medicines.filter((m: { taken_today: boolean }) => m.taken_today).length
+    }
+  }
+
+  const displayName = profile?.custom_name || profile?.preferred_name || 'Mak'
+  const bloodSugarBadge = latestBloodSugar ? getBloodSugarBadge(latestBloodSugar.value) : null
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-background">
@@ -43,25 +94,23 @@ export default function HomePage(): JSX.Element {
         subtitle="Panduan Kesihatan Mak"
         showBack={false}
         actions={
-          <div className="flex items-center gap-2 text-sm opacity-90">
-            <Heart className="h-5 w-5" />
-          </div>
+          <Link href="/profile" className="flex items-center gap-1 text-white opacity-90 hover:opacity-100 transition-opacity">
+            <UserCircle className="h-6 w-6" />
+          </Link>
         }
       />
 
       <PageContainer padding="md" maxWidth="wide">
         <div className="space-y-6 py-6">
 
-          {/* Welcome Section */}
+          {/* Welcome Section — Client Component untuk sapaan dinamik */}
           <Section className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
               <ShieldCheck className="text-success h-8 w-8" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-primary">
-                {greeting}, Mak! 👋
-              </h2>
+              <DashboardGreeting displayName={displayName} />
             </div>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-              {GREETINGS.how_are_you} Berikut adalah panduan kesihatan untuk hari ini.
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mt-2">
+              {GREETINGS.how_are_you}
             </p>
           </Section>
 
@@ -83,25 +132,122 @@ export default function HomePage(): JSX.Element {
             </div>
           </Section>
 
-          {/* Quick Stats - Using StatCard */}
+          {/* === DATA SEBENAR: Gula Darah & Ubat === */}
+          <Grid columns="responsive" gap="md">
+            {/* Kad Gula Darah Terkini */}
+            <Link href="/gula-darah" className="block">
+              <Card className="p-5 hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary-100 h-full">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Activity className="text-primary h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm font-semibold text-muted-foreground">Gula Darah Terkini</span>
+                    </div>
+                    {latestBloodSugar ? (
+                      <>
+                        <p className="text-3xl font-bold text-primary">
+                          {latestBloodSugar.value}
+                          <span className="text-base font-normal text-muted-foreground ml-1">mmol/L</span>
+                        </p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className={`px-2 py-0.5 rounded-full text-sm font-semibold border ${bloodSugarBadge?.bg} ${bloodSugarBadge?.text} ${bloodSugarBadge?.border}`}>
+                            {bloodSugarBadge?.label}
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {latestBloodSugar.meal_type === 'before_meal' ? 'Sebelum Makan' : 'Selepas Makan'} • {latestBloodSugar.logged_time}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-2xl font-bold text-muted-foreground">—</p>
+                        <p className="text-sm text-muted-foreground mt-1">Tiada rekod lagi</p>
+                        <p className="text-sm font-semibold text-primary mt-2">+ Tambah Rekod</p>
+                      </>
+                    )}
+                  </div>
+                  <ChevronRight className="text-muted-foreground h-5 w-5 flex-shrink-0 mt-1" />
+                </div>
+              </Card>
+            </Link>
+
+            {/* Kad Ubat Hari Ini */}
+            <Link href="/ubat" className="block">
+              <Card className="p-5 hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary-100 h-full">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-grow">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Pill className="text-accent h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm font-semibold text-muted-foreground">Ubat Hari Ini</span>
+                    </div>
+                    {todayMedicineStats.total > 0 ? (
+                      <>
+                        <p className="text-3xl font-bold text-primary">
+                          {todayMedicineStats.taken}
+                          <span className="text-base font-normal text-muted-foreground">/{todayMedicineStats.total}</span>
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">ubat sudah diambil</p>
+                        {todayMedicineStats.taken === todayMedicineStats.total ? (
+                          <div className="mt-2 flex items-center gap-1">
+                            <Check className="h-4 w-4 text-green-600" />
+                            <span className="text-sm font-semibold text-green-600">Semua sudah diambil ✅</span>
+                          </div>
+                        ) : (
+                          <div className="mt-2 flex items-center gap-1">
+                            <AlertTriangle className="h-4 w-4 text-orange-500" />
+                            <span className="text-sm font-semibold text-orange-600">
+                              {todayMedicineStats.total - todayMedicineStats.taken} lagi belum diambil
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-2xl font-bold text-muted-foreground">—</p>
+                        <p className="text-sm text-muted-foreground mt-1">Tiada ubat aktif</p>
+                        <p className="text-sm font-semibold text-primary mt-2">+ Tambah Ubat</p>
+                      </>
+                    )}
+                  </div>
+                  <ChevronRight className="text-muted-foreground h-5 w-5 flex-shrink-0 mt-1" />
+                </div>
+              </Card>
+            </Link>
+          </Grid>
+
+          {/* Quick Stats — Makanan */}
           <Grid columns="responsive" gap="md">
             <Link href="/makanan?status=safe" className="block">
-              <StatCard
-                title="Makanan Selamat"
-                value={FOOD_STATS.safe}
-                icon={<CheckCircle2 className="h-5 w-5" />}
-                color="success"
-                className="cursor-pointer hover:shadow-lg transition-shadow"
-              />
+              <Card className="p-4 hover:shadow-lg transition-shadow cursor-pointer border-2 border-green-100 bg-green-50/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
+                      <CheckCircle2 className="text-green-600 h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-green-700">{FOOD_STATS.safe}</p>
+                      <p className="text-sm font-medium text-green-600">Makanan Selamat</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="text-green-400 h-5 w-5" />
+                </div>
+              </Card>
             </Link>
             <Link href="/makanan?status=avoid" className="block">
-              <StatCard
-                title="Makanan Elak"
-                value={FOOD_STATS.avoid}
-                icon={<AlertTriangle className="h-5 w-5" />}
-                color="warning"
-                className="cursor-pointer hover:shadow-lg transition-shadow"
-              />
+              <Card className="p-4 hover:shadow-lg transition-shadow cursor-pointer border-2 border-orange-100 bg-orange-50/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                      <AlertTriangle className="text-orange-600 h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-orange-700">{FOOD_STATS.avoid}</p>
+                      <p className="text-sm font-medium text-orange-600">Makanan Elak</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="text-orange-400 h-5 w-5" />
+                </div>
+              </Card>
             </Link>
           </Grid>
 
@@ -158,33 +304,6 @@ export default function HomePage(): JSX.Element {
             </Grid>
           </Section>
 
-          {/* Current Meal Recommendation */}
-          <Section background="primary" padding="lg">
-            <Card className="bg-gradient-to-r from-primary to-primary-light text-white border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-14 h-14 rounded-full bg-accent/30 flex items-center justify-center flex-shrink-0">
-                      <UtensilsCrossed size={32} className="text-accent" />
-                    </div>
-                    <div className="text-center sm:text-left">
-                      <h3 className="text-xl font-bold">Waktu {currentMeal}</h3>
-                      <p className="text-sm opacity-90">
-                        Pilih makanan selamat untuk Mak
-                      </p>
-                    </div>
-                  </div>
-                  <Link href="/makanan" className="w-full sm:w-auto">
-                    <Button variant="accent" size="lg" className="w-full flex items-center justify-center gap-2">
-                      Lihat Makanan
-                      <ChevronRight size={20} />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </Section>
-
           {/* Sample Safe Foods Preview */}
           <Section
             title="Makanan Selamat"
@@ -220,6 +339,11 @@ export default function HomePage(): JSX.Element {
                     </Card>
                   </Link>
                 ))}
+                <Link href="/makanan?status=safe" className="block">
+                  <Button variant="outline" size="lg" className="w-full mt-2">
+                    Lihat Semua Makanan Selamat →
+                  </Button>
+                </Link>
               </div>
             ) : (
               <EmptyState
@@ -230,7 +354,7 @@ export default function HomePage(): JSX.Element {
             )}
           </Section>
 
-          {/* Important Alert - Using InfoBanner */}
+          {/* Important Alert */}
           <Section>
             <InfoBanner
               variant="warning"
@@ -254,7 +378,7 @@ export default function HomePage(): JSX.Element {
         </div>
       </PageContainer>
 
-      {/* Bottom Navigation - Mobile-first fixed */}
+      {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
         <div className="w-full px-2">
           <div className="grid grid-cols-4 gap-1 py-2">
