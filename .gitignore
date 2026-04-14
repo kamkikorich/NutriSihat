@@ -4,8 +4,16 @@
 .pnp.js
 .yarn/install-state.gz
 
+# Tooling
+.claude/
+.qwen/
+.playwright-mcp/
+
 # Testing
 /coverage
+test-results/
+playwright-report/
+blob-report/
 
 # Next.js
 /.next/
