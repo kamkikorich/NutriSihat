@@ -168,7 +168,7 @@ export default async function DashboardPage(): Promise<JSX.Element> {
                   <p className="text-lg text-primary mb-4">
                     Sila lengkapkan profil untuk pengalaman yang lebih baik.
                   </p>
-                  <Link href="/profile/setup">
+                  <Link href="/profile">
                     <Button variant="accent" size="lg">
                       Lengkapkan Profil
                     </Button>
